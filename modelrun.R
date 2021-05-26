@@ -2,6 +2,7 @@ remove(list=ls())
 library(tidyverse)
 library(INLA)
 library(sf)
+library(dplyr)
 library(spdep)
 INLA:::inla.dynload.workaround()
 
@@ -10,6 +11,7 @@ INLA:::inla.dynload.workaround()
 
 # set as working directory the folder where all the R files are.
 setwd("") 
+
 source("newfunctions.R")
 run.CV = F #2. Do you want to run cross-validation (CV)?
 run.postCV = F #3. Do you want to compute CV indexes? (output from Step 2. is required)
@@ -52,8 +54,10 @@ finaldb=readRDS("./data/finaldb")
 # mean.temperature    the mean weekly temperature in the i-th spatial unit. Data can be downloaded from https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land-monthly-means?tab=overview
 
 
-# 2. The files of the shapefile of interest. The id should correspond to the ID_space in finaldb
+# 2. The files of the shapefile of interest. The shp should have a column called ID_PE that corresponds to the 
+# ID_space in the finaldb.
 shp = read_sf("./data/shp.shp")
+
 W.nb <- poly2nb(shp)
 nb2INLA("W.adj", W.nb) 
 
@@ -87,7 +91,8 @@ if(run.CV | run.predictions){
   
   # Run the model once for getting a smart starting point for theta
   # choose only one gender and class age
-  data_start = data %>% filter(age.group=="70-79",sex=="female")
+  data_start = data %>% filter(age.group=="less40",sex=="female")
+  
   
   m = inla(formula,
            data=data_start,
@@ -103,6 +108,7 @@ if(run.CV | run.predictions){
   summary(m)
 }
 
+
 #######  2. Run Cross validation ----
 if(run.CV) {
   
@@ -117,10 +123,18 @@ if(run.CV) {
     print(j)
     
     ageg <- as.character(groups4cv$age.group[j])
-    sex <- as.character(groups4cv$sex[j])
-    data %>% filter(sex==sex,
-                    age.group==ageg) -> datCV_firslop
+    sexg <- as.character(groups4cv$sex[j])
+    data %>% filter(sex == sexg, 
+                    age.group == ageg) -> datCV_firslop
   
+
+    # recreate indexes
+    data$id.space = as.numeric(as.factor(data$ID_space))
+    data$id.time <- as.numeric(substr(data$EURO_LABEL, start = 7, stop = 8))
+    data$id.tmp <- inla.group(data$mean.temperature, n = 100, method = "cut", idx.only = TRUE)
+    data$id.year <- data$year - 2014
+    data$id.year <- as.numeric(as.factor(data$id.year))
+    
     list.CV.results.spacetime <- list()
     
     
@@ -136,12 +150,12 @@ if(run.CV) {
     }
 
     saveRDS(list.CV.results.spacetime,
-            file = paste0(path2save, paste0("yearCV_", ageg, "_", sex)))
+            file = paste0(path2save, paste0("yearCV_", ageg, "_", sexg)))
     
   }
   
   t_1 <- Sys.time()
-  print(t_1 - t_0) # 7 hours
+  print(t_1 - t_0) # 4 hours for Greece, 3h for Switzerland
 }
 
 
@@ -197,10 +211,10 @@ if(run.mod.pred){
   data = finaldb 
   
   # Create indexes
-  data$id.space = (data %>% mutate(ID_prov=group_indices(.,PROV)))$ID_prov
+  data$id.space <- as.numeric(as.factor(data$ID_space))
   data$id.time <- as.numeric(substr(data$EURO_LABEL, start = 7, stop = 8))
-  data$id.tmp <- inla.group(data$mean.temp, n = 100, method = "cut", idx.only = TRUE)
-  data$id.year <- data$Anno - 2014
+  data$id.tmp <- inla.group(data$mean.temperature, n = 100, method = "cut", idx.only = TRUE)
+  data$id.year <- data$year - 2014
   
   
   t_0 <- Sys.time()
@@ -208,12 +222,12 @@ if(run.mod.pred){
     
     print(j)
     
-    ageg <- as.character(groups4cv$CL_ETA[j])
-    sex <- as.character(groups4cv$Genere[j])
-    data %>% filter((CL_ETA %in% ageg) & (Genere %in% sex)) -> datCV_firslop
+    ageg <- as.character(groups4cv$age.group[j])
+    sexg <- as.character(groups4cv$sex[j])
+    data %>% filter((age.group %in% ageg) & (sex %in% sexg)) -> datCV_firslop
     
-    truth <- datCV_firslop$Morti[datCV_firslop$Anno >2019] 
-    datCV_firslop$Morti[datCV_firslop$Anno >2019] <- NA
+    truth <- datCV_firslop$deaths[datCV_firslop$year > 2019] 
+    datCV_firslop$deaths[datCV_firslop$year > 2019] <- NA
     
     
     in.mod = inla(formula,
@@ -229,12 +243,12 @@ if(run.mod.pred){
     
     res.list <- list(mod = in.mod, true_values = truth)
     saveRDS(res.list, file = paste0(path2save,
-                                    paste0("yearCV_", ageg, "_", sex, "respred2020")))
+                                    paste0("yearCV_", ageg, "_", sexg, "respred2020")))
     
   }
   
   t_1 <- Sys.time()
-  print(t_1 - t_0) #1.7 hours
+  print(t_1 - t_0) # 40 minutes for Greece, 20 for Switzerland
 }  
 
 ####### 5. Poisson Samples for 2015-2020 ----
@@ -247,10 +261,10 @@ if(Poisson.sampling2020){
   
   data <- finaldb
   # Create indexes
-  data$id.space = (data %>% mutate(ID_prov=group_indices(.,PROV)))$ID_prov
+  data$id.space <- as.numeric(as.factor(data$ID_space))
   data$id.time <- as.numeric(substr(data$EURO_LABEL, start = 7, stop = 8))
-  data$id.tmp <- inla.group(data$mean.temp, n = 100, method = "cut", idx.only = TRUE)
-  data$id.year <- data$Anno - 2014
+  data$id.tmp <- inla.group(data$mean.temperature, n = 100, method = "cut", idx.only = TRUE)
+  data$id.year <- data$year - 2014
   
   # get the poisson samples
   pois.samples.list <- list()
@@ -260,9 +274,9 @@ if(Poisson.sampling2020){
     
     print(j)
     
-    ageg <- as.character(groups4cv$CL_ETA[j])
-    sex <- as.character(groups4cv$Genere[j])
-    data %>% filter(Anno == max(Anno) & (CL_ETA %in% ageg) & (Genere %in% sex)) -> dat_tmp
+    ageg <- as.character(groups4cv$age.group[j])
+    sexg <- as.character(groups4cv$sex[j])
+    data %>% filter((age.group %in% ageg) & (sex %in% sexg)) -> dat_tmp
     
     set.seed(11)
     post.samples <- inla.posterior.sample(n = 1000, result = res.list[[j]]$mod)
@@ -275,16 +289,25 @@ if(Poisson.sampling2020){
     pois.samples <- as.data.frame(pois.samples)
     
     pois.samples$EURO_LABEL <- dat_tmp$EURO_LABEL
-    pois.samples$ID_PE <- dat_tmp$PROV
-    pois.samples$deaths <- dat_tmp$Morti 
-    pois.samples$popfin <- dat_tmp$popfin 
+    pois.samples$ID_space <- dat_tmp$ID_space
+    pois.samples$deaths <- dat_tmp$deaths 
+    pois.samples$population <- dat_tmp$population 
+    pois.samples$year <- dat_tmp$year
+    pois.samples <- pois.samples[pois.samples$year %in% max(pois.samples$year),]
     
     pois.samples.list[[j]] <- pois.samples
-  
+    
 }
 
   saveRDS(pois.samples.list,
         file = paste0(path2save, "poisson_samples_all"))
 
 }
+
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
+#####################################################################################################
 
