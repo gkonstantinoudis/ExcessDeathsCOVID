@@ -123,12 +123,17 @@ ylimsmin <- rep(c(min(c(data4plot$`F40<`$`2.5%`, data4plot$`M40<`$`2.5%`))*0.5,
                 times = 2)
 
 
-ylimsmax <- rep(c(max(c(data4plot$`F40<`$`97.5%`,   data4plot$`M40<`$`97.5%`))*1.3, 
-                  max(c(data4plot$`F40-59`$`97.5%`, data4plot$`M40-59`$`97.5%`))*1.3, 
-                  max(c(data4plot$`F60-69`$`97.5%`, data4plot$`M60-69`$`97.5%`))*1.3, 
-                  max(c(data4plot$`F70-79`$`97.5%`, data4plot$`M70-79`$`97.5%`))*1.3, 
-                  max(c(data4plot$`F80+`$`97.5%`,   data4plot$`M80+`$`97.5%`))*1.3), 
-                times = 2)
+ylimsmax <- rep(c(max(c(data4plot$`F40<`$`97.5%`,   data4plot$`M40<`$`97.5%`,
+                          data4plot$`F40<`$observed, data4plot$`M40<`$observed))*1.2,
+                    max(c(data4plot$`F40-59`$`97.5%`, data4plot$`M40-59`$`97.5%`,
+                          data4plot$`F40-59`$observed, data4plot$`M40-59`$observed))*1.2,
+                    max(c(data4plot$`F60-69`$`97.5%`, data4plot$`M60-69`$`97.5%`,
+                          data4plot$`F60-69`$observed, data4plot$`M60-69`$observed))*1.2,
+                    max(c(data4plot$`F70-79`$`97.5%`, data4plot$`M70-79`$`97.5%`,
+                          data4plot$`F70-79`$observed, data4plot$`M70-79`$observed))*1.2,
+                    max(c(data4plot$`F80+`$`97.5%`,   data4plot$`M80+`$`97.5%`,
+                          data4plot$`F80+`$observed, data4plot$`M80+`$observed))*1.2),
+                  times = 2)
 
 # get the months as the xaxis
 xaxis = EUROSTAT %>% 
@@ -329,8 +334,8 @@ excess4plot_prov$ex.cat = cut(excess4plot_prov$ExProb, breaks = c(0, 0.20, 0.80,
 
 
 prov.shp.tmp = left_join(prov.shp,
-                     excess4plot_prov,
-                     by=c("ID_PE"="ID_space")) 
+                     excess4plot_prov)
+                     #by=c("ID_PE"="ID_space")) 
 
 cols_exd <- brewer.pal(n = 6, name = "RdBu")
 
@@ -451,8 +456,8 @@ p_list_prob = list()
 
 for(i in 1:length(excess4plot_prov)){
   
-  prov.shp.tmp = left_join(prov.shp,excess4plot_prov[[i]],
-                            by=c("ID_PE"="ID_space")) 
+  prov.shp.tmp = left_join(prov.shp,excess4plot_prov[[i]])
+                            #by=c("ID_PE"="ID_space")) 
 
   
   p_list_excess[[i]] <- ggplot() +
