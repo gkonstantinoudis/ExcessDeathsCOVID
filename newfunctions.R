@@ -356,7 +356,7 @@ get2020data = function(post.samples = pois.samples.list, geo.res, link_table=NUL
     #sum.deaths.obs = left_join(sum.deaths, sum.observed) #memory exhausted
     sum.observed <- left_join(sum.observed, sum.population)
     sum.deaths.obs = data.frame(sum.deaths,sum.observed)
-    if(sum(endsWith(".1", colnames(sum.deaths.obs))) != 0){
+    if(sum(endsWith(colnames(sum.deaths.obs),".1")) != 0){
       sum.deaths.obs = sum.deaths.obs %>% select(-ends_with(".1"))
     }
     out = sum.deaths.obs
@@ -393,7 +393,7 @@ get2020data = function(post.samples = pois.samples.list, geo.res, link_table=NUL
       #sum.deaths.obs = left_join(sum.deaths, sum.observed) #memory exhausted
       sum.deaths.obs = data.frame(sum.deaths,sum.observed)
 
-      if(sum(endsWith(".1", colnames(sum.deaths.obs))) != 0){
+      if(sum(endsWith(colnames(sum.deaths.obs),".1")) != 0){
         sum.deaths.obs = sum.deaths.obs %>% select(-ends_with(".1"))
       }
       out[[i]] = sum.deaths.obs
@@ -432,7 +432,7 @@ get2020data = function(post.samples = pois.samples.list, geo.res, link_table=NUL
       #sum.deaths.obs = left_join(sum.deaths, sum.observed)
       sum.observed <- left_join(sum.observed, sum.population)
       sum.deaths.obs = data.frame(sum.deaths, sum.observed)
-      if(sum(endsWith(".1", colnames(sum.deaths.obs))) != 0){
+      if(sum(endsWith(colnames(sum.deaths.obs),".1")) != 0){
         sum.deaths.obs = sum.deaths.obs %>% select(-ends_with(".1"))
       }
       out[[i]] = sum.deaths.obs
