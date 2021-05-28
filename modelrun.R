@@ -62,7 +62,7 @@ W.nb <- poly2nb(shp)
 nb2INLA("W.adj", W.nb) 
 
 
-if(run.CV | run.predictions){
+if(run.CV | run.mod.pred){
   # Select data for the period 2015-2019 
   data = finaldb %>% filter(year<max(year))
   
