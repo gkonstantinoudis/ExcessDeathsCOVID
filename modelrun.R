@@ -129,11 +129,11 @@ if(run.CV) {
   
 
     # recreate indexes
-    data$id.space = as.numeric(as.factor(data$ID_space))
-    data$id.time <- as.numeric(substr(data$EURO_LABEL, start = 7, stop = 8))
-    data$id.tmp <- inla.group(data$mean.temperature, n = 100, method = "cut", idx.only = TRUE)
-    data$id.year <- data$year - 2014
-    data$id.year <- as.numeric(as.factor(data$id.year))
+    datCV_firslop$id.space = as.numeric(as.factor(datCV_firslop$ID_space))
+    datCV_firslop$id.time <- as.numeric(substr(datCV_firslop$EURO_LABEL, start = 7, stop = 8))
+    datCV_firslop$id.tmp <- inla.group(datCV_firslop$mean.temperature, n = 100, method = "cut", idx.only = TRUE)
+    datCV_firslop$id.year <- datCV_firslop$year - 2014
+    datCV_firslop$id.year <- as.numeric(as.factor(datCV_firslop$id.year))
     
     list.CV.results.spacetime <- list()
     
