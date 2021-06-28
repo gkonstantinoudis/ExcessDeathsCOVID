@@ -666,10 +666,10 @@ compute.excess = function(data,divide.by,remove.covid=NULL,geo.name){
   # - population (if divide.by="pop")
   # - the name of the column containing the reference to the spatial unit (e.g. "RegionID")
   
-  #divide.by = c("obs","pop")
+  #divide.by = c("pred","pop")
 
   # Compute relative total excess deaths:
-  # - (obs-pred)/obs if divide.by="obs"
+  # - (obs-pred)/pred if divide.by="pred"
   # - (pop-pred)/pop if divide.by="pop"
   
   # The function returns the 1000 values of the excess mortality rate + 
@@ -684,14 +684,14 @@ compute.excess = function(data,divide.by,remove.covid=NULL,geo.name){
   
     if(is.null(remove.covid)){
       xs=-1*sweep(as.matrix(data %>% select(starts_with("V"))),
-              1,data$observed,FUN ="-")
+                  1,data$observed,FUN ="-")
     } else {
       covid_cases = data %>% select(remove.covid) %>% pull()
       xs=-1*sweep(as.matrix(data %>% select(starts_with("V"))),
                   1,data$observed-covid_cases,FUN ="-")
     }
-    if(divide.by=="obs"){
-      xs=sweep(as.matrix(xs),1,data$observed,FUN ="/")
+    if(divide.by=="pred"){
+      xs=as.matrix(xs)/as.matrix(data %>% select(starts_with("V")))
     }else{
       xs=sweep(as.matrix(xs),1,data$population,FUN ="/")
     }
