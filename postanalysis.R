@@ -412,11 +412,11 @@ out_prov = get2020data(post.samples = pois.samples.list,
                       country=country.name)
 
 # I will replace 0s of the observed with 0.1 so I dont have inf on the (obs-pred)/obs
-lapply(out_prov, function(X){
-  X$observed[X$observed == 0] <- 0.1 
-  return(X)
-  }
-) -> out_prov
+# lapply(out_prov, function(X){
+#   X$observed[X$observed == 0] <- 0.1 
+#   return(X)
+#   }
+# ) -> out_prov
 
 # of course this is subject to extremes which are more aparent in the younger age groups. In 
 # any case though these younger groups are not shown in the main manuscript due to the low 
