@@ -124,15 +124,15 @@ ylimsmin <- rep(c(min(c(data4plot$`F40<`$`2.5%`, data4plot$`M40<`$`2.5%`))*0.5,
 
 
 ylimsmax <- rep(c(max(c(data4plot$`F40<`$`97.5%`,   data4plot$`M40<`$`97.5%`,
-                          data4plot$`F40<`$observed, data4plot$`M40<`$observed))*1.2,
+                          data4plot$`F40<`$observed, data4plot$`M40<`$observed))*1.3,
                     max(c(data4plot$`F40-59`$`97.5%`, data4plot$`M40-59`$`97.5%`,
-                          data4plot$`F40-59`$observed, data4plot$`M40-59`$observed))*1.2,
+                          data4plot$`F40-59`$observed, data4plot$`M40-59`$observed))*1.3,
                     max(c(data4plot$`F60-69`$`97.5%`, data4plot$`M60-69`$`97.5%`,
-                          data4plot$`F60-69`$observed, data4plot$`M60-69`$observed))*1.2,
+                          data4plot$`F60-69`$observed, data4plot$`M60-69`$observed))*1.3,
                     max(c(data4plot$`F70-79`$`97.5%`, data4plot$`M70-79`$`97.5%`,
-                          data4plot$`F70-79`$observed, data4plot$`M70-79`$observed))*1.2,
+                          data4plot$`F70-79`$observed, data4plot$`M70-79`$observed))*1.3,
                     max(c(data4plot$`F80+`$`97.5%`,   data4plot$`M80+`$`97.5%`,
-                          data4plot$`F80+`$observed, data4plot$`M80+`$observed))*1.2),
+                          data4plot$`F80+`$observed, data4plot$`M80+`$observed))*1.3),
                   times = 2)
 
 # get the months as the xaxis
@@ -203,7 +203,7 @@ out_reg = get2020data(post.samples = pois.samples.list,
 
 excess4plot_reg = lapply(out_reg,
                              compute.excess,
-                             divide.by="obs",
+                             divide.by="pred",
                              geo.name="RegionID")
 
 
@@ -216,7 +216,7 @@ out_country = get2020data(post.samples = pois.samples.list,
                   country=country.name)
 excess4plot_country = lapply(out_country,
                              compute.excess,
-                             divide.by="obs",
+                             divide.by="pred",
                              geo.name="COUNTRY")
 
 
@@ -316,7 +316,7 @@ out_prov = get2020data(post.samples = pois.samples.list,
 
 
 excess4plot_prov = compute.excess(out_prov,
-                                  divide.by="obs",
+                                  divide.by="pred",
                                   geo.name="ID_space")
 
 
@@ -412,11 +412,11 @@ out_prov = get2020data(post.samples = pois.samples.list,
                       country=country.name)
 
 # I will replace 0s of the observed with 0.1 so I dont have inf on the (obs-pred)/obs
-lapply(out_prov, function(X){
-  X$observed[X$observed == 0] <- 0.1 
-  return(X)
-  }
-) -> out_prov
+# lapply(out_prov, function(X){
+#   X$observed[X$observed == 0] <- 0.1 
+#   return(X)
+#   }
+# ) -> out_prov
 
 # of course this is subject to extremes which are more aparent in the younger age groups. In 
 # any case though these younger groups are not shown in the main manuscript due to the low 
@@ -425,7 +425,7 @@ lapply(out_prov, function(X){
 
 excess4plot_prov = lapply(out_prov,
                           compute.excess,
-                          divide.by="obs",
+                          divide.by="pred",
                           geo.name="ID_space")
 
 
