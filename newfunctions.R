@@ -720,6 +720,46 @@ compute.excess = function(data,divide.by,remove.covid=NULL,geo.name){
 CrI <- function(X) paste0(X[1], " ", "(", X[2], ", ", X[3], ")")
 
 
+
+
+################################################################################
+# Compute excess deaths
+################################################################################
+
+# Code taken from 'compute.excess' to obtain summary stats on the
+#  estimated excess deaths.
+compute.excess.deaths = function(data, remove.covid = NULL, geo.name){
+
+    if(is.null(remove.covid)){
+      xs=-1*sweep(as.matrix(data %>% select(starts_with("V"))),
+                  1,data$observed,FUN ="-")
+    } else {
+      covid_cases = data %>% select(remove.covid) %>% pull()
+      xs=-1*sweep(as.matrix(data %>% select(starts_with("V"))),
+                  1,data$observed-covid_cases,FUN ="-")
+    }
+
+    colnames(xs)=stringr::str_replace(colnames(xs),"V","xsd")
+    xs = as_tibble(xs)
+   
+    #xs$DEN_REG = data$DEN_REG
+    xs[,geo.name] = data[,geo.name]
+   
+    # Compute posterior summary statistics
+    xs = xs %>% mutate(
+      mean.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,mean,na.rm=T),
+      median.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,median,na.rm=T),
+      sd.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,sd,na.rm=T),
+      low.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,quantile,.025,na.rm=T),
+      upp.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,quantile,.975,na.rm=T))
+
+    return(xs)
+}
+
+
+
+
+
 ################################################################################
 ################################################################################
 ################################################################################
