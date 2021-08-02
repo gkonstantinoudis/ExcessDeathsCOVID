@@ -709,6 +709,17 @@ compute.excess = function(data,divide.by,remove.covid=NULL,geo.name){
       low.excess=apply(as.matrix(xs %>% select(contains("xs"))),1,quantile,.025,na.rm=T),
       upp.excess=apply(as.matrix(xs %>% select(contains("xs"))),1,quantile,.975,na.rm=T))
     
+    # Compute exc. prob. and median/ex. categories
+    xs$ExProb = apply(select(xs, starts_with("xs")) > 0, 1, mean)
+    xs$Median.cat = cut(xs$median.excess,
+      breaks = c(-100, -0.15, -0.05, 0, 0.05, 0.15, 100),
+      labels = c("-15<", "[-15, -5)", "[-5, 0)",
+        "[0, 5)", "[5, 15)", "15>"),
+      include.lowest = TRUE, right = FALSE)
+    xs$ex.cat = cut(xs$ExProb, breaks = c(0, 0.20, 0.80, 1.01),
+      labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
+      include.lowest = TRUE, right = FALSE)
+
     return(xs)
 }
 
@@ -752,6 +763,20 @@ compute.excess.deaths = function(data, remove.covid = NULL, geo.name){
       sd.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,sd,na.rm=T),
       low.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,quantile,.025,na.rm=T),
       upp.excess.deaths=apply(as.matrix(xs %>% select(contains("xsd"))),1,quantile,.975,na.rm=T))
+
+    # Compute exc. prob. and median/ex. categories
+    xs$ExProb.deaths = apply(select(xs, starts_with("xsd")) > 0, 1, mean)
+    xs$Median.deaths.cat = cut(xs$median.excess.deaths,
+      #breaks = c(-100, -0.15, -0.05, 0, 0.05, 0.15, 100),
+      #labels = c("-15<", "[-15, -5)", "[-5, 0)",
+      #  "[0, 5)", "[5, 15)", "15>"),
+      breaks = c(-1000000, -1000, -500, -100, 0, 100, 500, 1000, 1000000), 
+      labels = c("-1000<", "[-1000, -500)", "[-500, -100)", "[-100, 0)",
+        "[0, 100)", "[100, 500)", "[500, 1000", "1000>"),
+      include.lowest = TRUE, right = FALSE)
+    xs$ex.deaths.cat = cut(xs$ExProb.deaths, breaks = c(0, 0.20, 0.80, 1.01),
+      labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
+      include.lowest = TRUE, right = FALSE)
 
     return(xs)
 }
