@@ -470,7 +470,7 @@ get2020data = function(post.samples = pois.samples.list, geo.res, link_table=NUL
 get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_table=NULL, stratify.by,country="Italy"){
   # geo.res = c("province","region","country)
   # stratify.by = c("none","age","sex","agesex")   
-  # link_table is a data frame with ID_PE (province code) and DEN_REG (region name). required only if geo.res="region"
+  # link_table is a data frame with ID_space (province code) and RegionID (region name). required only if geo.res="region"
   # groups4cv is the data frame with the 10 combinations of age x sex groups
   
   groups4cv <- as.data.frame(expand.grid(age = c("40<", "40-59", "60-69", "70-79", "80+"),
@@ -485,12 +485,12 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
   # For each i in 1:10 extract only the necessary data (1000 simulations + observed data)
   if(geo.res == "province"){
     pblapply(post.samples, function(X){
-      X <- select(X, starts_with("V"), "ID_PE", "EURO_LABEL")
+      X <- select(X, starts_with("V"), "ID_space", "EURO_LABEL")
       return(X)
     }) -> list.sum.deaths
     
     pblapply(post.samples, function(X){
-      X <- data.frame(ID_PE = X$ID_PE, observed = X$deaths, EURO_LABEL=X$EURO_LABEL)
+      X <- data.frame(ID_space = X$ID_space, observed = X$deaths, EURO_LABEL=X$EURO_LABEL)
       return(X)
     }) -> list.observed
   }
@@ -499,12 +499,12 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
   if(geo.res == "region"){
     pblapply(post.samples, function(X){
       
-      X <- select(X, starts_with("V"), "ID_PE","EURO_LABEL")
-      X <- left_join(X, link_table, by = c("ID_PE"))
+      X <- select(X, starts_with("V"), "ID_space","EURO_LABEL")
+      X <- left_join(X, link_table, by = c("ID_space"))
       
       X %>% 
-        select(starts_with("V"), "DEN_REG","EURO_LABEL") %>% 
-        group_by(DEN_REG,EURO_LABEL) %>%
+        select(starts_with("V"), "RegionID","EURO_LABEL") %>% 
+        group_by(RegionID,EURO_LABEL) %>%
         summarise_all(sum) %>% 
         ungroup() -> X
       X <- as.data.frame(X)
@@ -515,11 +515,11 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
     }) -> list.sum.deaths
     
     pblapply(post.samples, function(X){
-      X <- data.frame(ID_PE = X$ID_PE, observed = X$deaths,EURO_LABEL=X$EURO_LABEL)
-      X <- left_join(X, link_table, by = c("ID_PE"))
+      X <- data.frame(ID_space = X$ID_space, observed = X$deaths,EURO_LABEL=X$EURO_LABEL)
+      X <- left_join(X, link_table, by = c("ID_space"))
       
       X %>% 
-        group_by(DEN_REG,EURO_LABEL) %>%
+        group_by(RegionID,EURO_LABEL) %>%
         summarise(observed = sum(observed)) %>% 
         ungroup() -> Y
       Y$observed <- as.numeric(Y$observed)
@@ -557,16 +557,16 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
     sum.deaths <- Reduce("+", lapply(list.sum.deaths,
                                      function(X) select(X, starts_with("V"))))
     sum.deaths$EURO_LABEL = list.sum.deaths[[1]]$EURO_LABEL
-    if(geo.res=="province") sum.deaths$ID_PE <- list.sum.deaths[[1]]$ID_PE
-    if(geo.res=="region") sum.deaths$DEN_REG <- list.sum.deaths[[1]]$DEN_REG
+    if(geo.res=="province") sum.deaths$ID_space <- list.sum.deaths[[1]]$ID_space
+    if(geo.res=="region") sum.deaths$RegionID <- list.sum.deaths[[1]]$RegionID
     if(geo.res=="country") sum.deaths$COUNTRY <- country
     
     
     sum.observed <- Reduce("+", lapply(list.observed,
                                        function(X) select(X,observed)))
     sum.observed$EURO_LABEL = list.observed[[1]]$EURO_LABEL
-    if(geo.res=="province") sum.observed$ID_PE <- list.observed[[1]]$ID_PE
-    if(geo.res=="region") sum.observed$DEN_REG <- list.observed[[1]]$DEN_REG
+    if(geo.res=="province") sum.observed$ID_space <- list.observed[[1]]$ID_space
+    if(geo.res=="region") sum.observed$RegionID <- list.observed[[1]]$RegionID
     if(geo.res=="country") sum.observed$COUNTRY <- country
     
     #sum.deaths.obs = left_join(sum.deaths, sum.observed) #memory exhausted
@@ -587,16 +587,16 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
       sum.deaths <- Reduce("+", lapply(list.sum.deaths[groups4cv$sex == levels(groups4cv$sex)[i]],
                                        function(X) select(X, starts_with("V"))))
       sum.deaths$EURO_LABEL = list.sum.deaths[[1]]$EURO_LABEL
-      if(geo.res=="province") sum.deaths$ID_PE <- list.sum.deaths[[1]]$ID_PE
-      if(geo.res=="region") sum.deaths$DEN_REG <- list.sum.deaths[[1]]$DEN_REG
+      if(geo.res=="province") sum.deaths$ID_space <- list.sum.deaths[[1]]$ID_space
+      if(geo.res=="region") sum.deaths$RegionID <- list.sum.deaths[[1]]$RegionID
       if(geo.res=="country") sum.deaths$COUNTRY <- country
       
       
       sum.observed <- Reduce("+", lapply(list.observed[groups4cv$sex == levels(groups4cv$sex)[i]],
                                          function(X) select(X, observed)))
       sum.observed$EURO_LABEL = list.observed[[1]]$EURO_LABEL
-      if(geo.res=="province") sum.observed$ID_PE <- list.observed[[1]]$ID_PE
-      if(geo.res=="region") sum.observed$DEN_REG <- list.observed[[1]]$DEN_REG
+      if(geo.res=="province") sum.observed$ID_space <- list.observed[[1]]$ID_space
+      if(geo.res=="region") sum.observed$RegionID <- list.observed[[1]]$RegionID
       if(geo.res=="country") sum.observed$COUNTRY <- country
       
       #sum.deaths.obs = left_join(sum.deaths, sum.observed) #memory exhausted
@@ -618,16 +618,16 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
       sum.deaths <- Reduce("+", lapply(list.sum.deaths[groups4cv$age == levels(groups4cv$age)[i]],
                                        function(X) select(X, starts_with("V"))))
       sum.deaths$EURO_LABEL = list.sum.deaths[[1]]$EURO_LABEL
-      if(geo.res=="province") sum.deaths$ID_PE <- list.sum.deaths[[1]]$ID_PE
-      if(geo.res=="region") sum.deaths$DEN_REG <- list.sum.deaths[[1]]$DEN_REG
+      if(geo.res=="province") sum.deaths$ID_space <- list.sum.deaths[[1]]$ID_space
+      if(geo.res=="region") sum.deaths$RegionID <- list.sum.deaths[[1]]$RegionID
       if(geo.res=="country") sum.deaths$COUNTRY <- country
       
       
       sum.observed <- Reduce("+", lapply(list.observed[groups4cv$age == levels(groups4cv$age)[i]],
                                          function(X) select(X, observed)))
       sum.observed$EURO_LABEL = list.observed[[1]]$EURO_LABEL
-      if(geo.res=="province") sum.observed$ID_PE <- list.observed[[1]]$ID_PE
-      if(geo.res=="region") sum.observed$DEN_REG <- list.observed[[1]]$DEN_REG
+      if(geo.res=="province") sum.observed$ID_space <- list.observed[[1]]$ID_space
+      if(geo.res=="region") sum.observed$RegionID <- list.observed[[1]]$RegionID
       if(geo.res=="country") sum.observed$COUNTRY <- country
       
       #sum.deaths.obs = left_join(sum.deaths, sum.observed)
