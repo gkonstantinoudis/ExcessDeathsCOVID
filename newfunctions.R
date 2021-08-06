@@ -473,8 +473,15 @@ get2020weeklydata = function(post.samples = pois.samples.list, geo.res, link_tab
   # link_table is a data frame with ID_space (province code) and RegionID (region name). required only if geo.res="region"
   # groups4cv is the data frame with the 10 combinations of age x sex groups
   
-  groups4cv <- as.data.frame(expand.grid(age = c("40<", "40-59", "60-69", "70-79", "80+"),
-                                         sex = c("F", "M")))
+  if(length(post.samples) == 8){
+    groups4cv <- as.data.frame(expand.grid(age = c("40-59", "60-69", "70-79", "80+"),
+                                           sex = c("F", "M")))
+  }
+  
+  if(length(post.samples) == 10){
+    groups4cv <- as.data.frame(expand.grid(age = c("40<", "40-59", "60-69", "70-79", "80+"),
+                                           sex = c("F", "M")))
+  }
   
   
   # Indexes for 2020 observations
