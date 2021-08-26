@@ -173,7 +173,16 @@ print((p_list[[7]]|p_list[[2]])/
 dev.off()
 
 
+# VGR: Convert into images and save
+library(png)
 
+p_list_png <- lapply(p_list, function(X) {
+  ff <-  tempfile(fileext=".png")
+  ggsave(ff, X)
+  readPNG(ff)
+})
+save(file = paste0(country.name, "_p_list.RData"),
+  list = "p_list_png")
 
 
 
