@@ -187,7 +187,7 @@ save(file = "Switzerland.RData", list = c("d", "d_week"))
 
 stop("")
 
-
+# The following code is old code as it is not supposed to be run.
 
 
 d_week <- lapply(geo.res, function(GEO) {
