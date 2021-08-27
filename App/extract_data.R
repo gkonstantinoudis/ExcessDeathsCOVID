@@ -86,6 +86,7 @@ d <- lapply(geo.res, function(GEO) {
   res <- lapply(strata, function(STRATA) {
     aux <- get2020data(DB$CHE, geo.res = GEO, link_table = link_table,
       stratify.by = STRATA, country = "Switzerland")
+    print(names(aux))
 
     # Get geo.name
     if(GEO == "country")  geo.name <- "COUNTRY"
@@ -103,6 +104,9 @@ d <- lapply(geo.res, function(GEO) {
      # Re-scale REM
      aux <- rescale_REM(aux)
 
+     # Remove observed to grant data condidentiality
+     aux <- mutate(aux, observed = NULL)
+
     } else {
       aux <- lapply(aux, function(X) {
          aux2 <- compute.excess(X, divide.by = "pred", geo.name = geo.name)
@@ -115,6 +119,9 @@ d <- lapply(geo.res, function(GEO) {
 
          # Re-scale REM
          res <- rescale_REM(res)
+
+         # Remove observed to grant data condidentiality
+         res <- mutate(res, observed = NULL)
 
          return(res)
       })
@@ -153,6 +160,9 @@ d_week <- lapply(geo.res, function(GEO) {
       # Re-scale REM
       aux <- rescale_REM(aux)
 
+     # Remove observed to grant data condidentiality
+     aux <- mutate(aux, observed = NULL)
+
      #aux <- merge(MAPS$CHE[[GEO]], aux)
     } else {
       aux <- lapply(aux, function(X) {
@@ -166,6 +176,9 @@ d_week <- lapply(geo.res, function(GEO) {
 
          # Re-scale REM
          res <- rescale_REM(res)
+
+         # Remove observed to grant data condidentiality
+         res <- mutate(res, observed = NULL)
 
          return(res)
       })
