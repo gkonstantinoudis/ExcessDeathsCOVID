@@ -42,7 +42,7 @@ link_table = readRDS("./data/CHE/link_caterpilar")
 
 
 # Load functions (written by Akis)
-source("../ExcessDeathsCOVID/newfunctions.R")
+source("../newfunctions.R")
 
 
 # Merge map and link table
