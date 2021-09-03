@@ -62,7 +62,7 @@ ui <- dashboardPage(title = "Excess Mortality App",
       "Statistic", 
       list("Median" = "median", "Posterior probability" = "pprob")
     ),
-    selectInput("country", "Country", c("Switzerland"),
+    selectInput("country", "Country", c("England", "Greece", "Italy", "Spain", "Switzerland"),
       selected = "Switzerland"),
     selectInput("gender", "Gender", list("Both" = "B", "Females" = "F", "Males" = "M"),
       selected = "Females"),

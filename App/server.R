@@ -24,8 +24,12 @@ print("Reading server.R")
 
 #Load
 #load("extract_data.RData")
-load("Switzerland.RData")
-load("Switzerland_p_list.RData")
+
+#country <- "Italy"
+#country <- "Greece"
+#country <- "Switzerland"
+#load(paste0("data/", country, ".RData"))
+#load(paste0("data/", country, "_p_list.RData"))
 
 print("----------DATA LOADED-----------")
 
@@ -42,6 +46,20 @@ h_options <- highlightOptions(color = "white", weight = 2,
 # Define server logic for random distribution app ----
 server <- function(input, output, session) {
 
+
+  # Reactive data to be loaded when a country is selected
+  rv <- reactiveValues(
+    data = NULL, # Main data
+    tmp_plots = NULL # Plots of temporal trends
+  )
+
+  # Load data
+  observeEvent(input$country, {
+    print("Load data")
+    rv$data <- mget(load(paste0("data/", input$country, ".RData")))
+    rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))
+
+  }) # End: Load data
 
   # Observe what tab is being selected
   # This is used to set the values in the selection
@@ -83,9 +101,9 @@ server <- function(input, output, session) {
   get_age_sex_data <- function(weekly = FALSE) {
 
     if(!weekly)
-      tab <- d
+      tab <- rv$data$d
     else
-      tab <- d_week
+      tab <- rv$data$d_week
 
     # Main subset
     aux <- tab[[input$aggregation]]
