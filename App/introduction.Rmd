@@ -20,6 +20,8 @@ has also been reported
 the posterior probability of REM being higher than 100 and
 the posterior probability of NED being higher than zero. Both posterior probabilities are referred to as *posterior probability* throughout this App.
 
+This App gives access to results at a finer resolution than the results presented in the paper. For this reason, for certain age and sex groups at certain NUTS3 areas the estimates may be unstable. Hence, you should interpret them with care or use a higher aggregation level instead.
+
 # How to use the App?
 
 Esentially, this App will allow you to navigate through the different excess mortality estimates discussed in the paper according to country, administrative level, age group and gender. The user can select these variables from the different drop-down menus on the left and the results can be accessed by clicking on the differnt tabs in the top-left part of the App. The different tabs are described below.
