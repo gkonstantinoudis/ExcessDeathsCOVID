@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(shinydashboard)
+library(shinyalert)
 library(htmlwidgets)
 library(leaflet)
 library(dygraphs)

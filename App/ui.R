@@ -5,6 +5,7 @@ library(plotly)
 library(leaflet)
 #library(leafpop)
 library(plotly)
+library(shinyalert)
 
 
 if(system("hostname", intern = TRUE) == "atlasmortalidad.uclm.es") {
@@ -31,6 +32,7 @@ ui <- dashboardPage(title = "Excess Mortality App",
     skin = "red", 
   dbHeader,
   dashboardSidebar(
+    useShinyalert(),  # Set up shinyalert
     sidebarMenu(id = "tabs",
       menuItem("Introduction", tabName = "introduction", icon = icon("info")),
       menuItem("Spatial Analysis", tabName = "spatial", icon = icon("map"),

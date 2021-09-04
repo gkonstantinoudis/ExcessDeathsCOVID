@@ -6,6 +6,7 @@ library(RColorBrewer)
 library(plotly)
 library(grid)
 library(png)
+library(shinyalert)
 
 
 if(system("hostname", intern = TRUE) == "atlasmortalidad.uclm.es") {
@@ -45,6 +46,9 @@ h_options <- highlightOptions(color = "white", weight = 2,
 
 # Define server logic for random distribution app ----
 server <- function(input, output, session) {
+
+   shinyalert(title = "Welcome", type = "info", html = TRUE,
+     text = includeMarkdown("info.Rmd"))
 
 
   # Reactive data to be loaded when a country is selected

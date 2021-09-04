@@ -1,0 +1,15 @@
+---
+title: "Introduction"
+author: ""
+date: ""
+output: html_document2
+---
+
+
+This App includes some extra results of paper *Excess mortality in Europe during the 2020 COVID-19 pandemic: a multi-country study at the sub-national level by G. Konstantinoudis et al. (2021)*. 
+
+* Read carefully the **Introduction** before using the App.
+
+* Estimates for certain age and sex groups at certain NUTS3 areas may be unstable, so you should interpret them with care or use higher levels of aggregation instead.
+
+
