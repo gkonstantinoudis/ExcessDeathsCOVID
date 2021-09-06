@@ -50,7 +50,7 @@ ui <- dashboardPage(title = "Excess Mortality App",
         menuSubItem("Summary", tabName = "stsummary"),
         menuSubItem("Excess mortality", tabName = "stexcess")
       ),
-      menuItem("Help", tabName = "help", icon = icon("question")),
+      #menuItem("Help", tabName = "help", icon = icon("question")),
       menuItem("Contact", tabName = "contact", icon = icon("envelope"))
     ),
     hr(),
@@ -261,7 +261,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
 #          tags$style(type = "text/css", "#ABOBSiframe {height: calc(100vh - 230px) !important;}")
 #        )
 #      ),
-      tabItem(tabName = "help", fluidPage(withMathJax(includeMarkdown("help.Rmd")))),
+      #tabItem(tabName = "help", fluidPage(withMathJax(includeMarkdown("help.Rmd")))),
       tabItem(tabName = "contact", fluidPage(includeMarkdown("contact.Rmd")))
 
     )
