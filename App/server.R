@@ -61,7 +61,7 @@ server <- function(input, output, session) {
   observeEvent(input$country, {
     print("Load data")
     rv$data <- mget(load(paste0("data/", input$country, ".RData")))
-    rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))
+    rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
 
   }) # End: Load data
 
@@ -228,7 +228,7 @@ server <- function(input, output, session) {
           return(res)
       })
 
-      print(length(plts))
+      #print(length(plts))
 
       popup <- popupGraph(plts)
     }
@@ -380,7 +380,7 @@ server <- function(input, output, session) {
   output$tabtmpsummary <- renderTable({
 
     tab <- summary_table(get_age_sex_data(weekly = TRUE)) #st_drop_geometry(get_age_sex_data())
-    print(tab)
+    #print(tab)
    }, rownames = TRUE) #options = list(autoWidth = TRUE, scrollX = TRUE))
 
 
@@ -508,7 +508,8 @@ server <- function(input, output, session) {
     )
 
     outfile <- tempfile(fileext = '.png')
-    writePNG(p_list_png[[idx]], outfile)
+
+    writePNG(rv$tmp_plots[[idx]], outfile)
 
     list(src = outfile,
          contentType = 'image/png',
