@@ -779,7 +779,7 @@ compute.excess.deaths = function(data, remove.covid = NULL, geo.name){
       #  "[0, 5)", "[5, 15)", "15>"),
       breaks = c(-1000000, -1000, -500, -100, 0, 100, 500, 1000, 1000000), 
       labels = c("-1000<", "[-1000, -500)", "[-500, -100)", "[-100, 0)",
-        "[0, 100)", "[100, 500)", "[500, 1000", "1000>"),
+        "[0, 100)", "[100, 500)", "[500, 1000)", "1000>"),
       include.lowest = TRUE, right = FALSE)
     xs$ex.deaths.cat = cut(xs$ExProb.deaths, breaks = c(0, 0.20, 0.80, 1.01),
       labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
