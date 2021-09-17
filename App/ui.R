@@ -136,7 +136,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
          #dataTableOutput('tabspsummary')
          tableOutput('tabtmpsummary'),
          h5("This summary only provides statistics of national estimates."),
-         fluidPage(includeMarkdown("legend.Rmd")) 
+         fluidPage(includeMarkdown("legend_tabtemp.Rmd")) 
        )
     ),
     tabItem(tabName = "tmpmortality",
