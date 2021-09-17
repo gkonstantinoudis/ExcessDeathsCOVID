@@ -546,7 +546,7 @@ server <- function(input, output, session) {
 
     list(src = outfile,
          contentType = 'image/png',
-         width = 600,
+         width = 400,
          height = 400,
          alt = "Observed and excess mortality.")
   }, deleteFile = TRUE)
