@@ -74,11 +74,12 @@ PlotTimeSeries <- function(dat, dat_true, fcol, lcol, main.title, lockdowns){
   
   ggplot(data = dat) +
     
-    geom_rect(aes(xmin = lockdowns[1], xmax = lockdowns[2], ymin = -Inf, ymax = Inf), 
-              alpha = alpha.level,  fill = mcol) + 
-    
-    geom_rect(aes(xmin = lockdowns[3], xmax = lockdowns[4], ymin = -Inf, ymax = Inf), 
-              alpha = alpha.level, fill = mcol) +
+    # lockdowns not shown in last version of paper
+    #geom_rect(aes(xmin = lockdowns[1], xmax = lockdowns[2], ymin = -Inf, ymax = Inf), 
+    #          alpha = alpha.level,  fill = mcol) + 
+    #
+    #geom_rect(aes(xmin = lockdowns[3], xmax = lockdowns[4], ymin = -Inf, ymax = Inf), 
+    #          alpha = alpha.level, fill = mcol) +
     
     geom_line(aes(x = x, y = `50%`)) + 
     
