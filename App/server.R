@@ -246,7 +246,9 @@ server <- function(input, output, session) {
 
     mymap <- get_age_sex_data()
 
-    colors <- c(rev(brewer.pal(n = 6, name = "RdBu")))
+    #colors <- c(rev(brewer.pal(n = 6, name = "RdBu")))
+    # Colours as in paper
+    colors <- rev(brewer.pal(n = 10, name = "RdBu")[1:6])
     labels <- levels(mymap$Median.cat)
     factpal <- colorFactor(colors, mymap$Median.cat)
 
@@ -270,7 +272,9 @@ server <- function(input, output, session) {
 
     popup <- create_popup (mymap, tab)
   
-    colors <- rev(brewer.pal(n = 3, name = "RdBu"))
+    #colors <- rev(brewer.pal(n = 3, name = "RdBu"))
+    # Colours as in paper
+    colors <- rev(brewer.pal(n = 11, name = "RdBu")[c(2, 4, 6, 8, 10)])
     labels <- levels(mymap$ex.cat)
     factpal <- colorFactor(colors, mymap$ex.cat)
 
