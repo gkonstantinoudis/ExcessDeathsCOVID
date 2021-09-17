@@ -209,7 +209,7 @@ server <- function(input, output, session) {
           y_var <- "median.excess"
           y_low <- "low.excess"
           y_upp <- "upp.excess"
-          y_lab <- "Relative excess mortality (median)"
+          y_lab <- "Relative excess mortality"
         } else {
           y_var <- "ExProb"
           y_low <- NULL
@@ -221,7 +221,7 @@ server <- function(input, output, session) {
           y_var <- "median.excess.deaths"
           y_low <- "low.excess.deaths"
           y_upp <- "upp.excess.deaths"
-          y_lab <- "Number of excess deaths (median)"
+          y_lab <- "Number of excess deaths"
         } else {
           y_var <- "ExProb.deaths"
           y_low <- NULL
@@ -250,7 +250,7 @@ server <- function(input, output, session) {
             geom_hline(yintercept = 0, col ="red", linetype = "dashed")
        }
           if(!is.null(y_low) )
-            res <- res + geom_ribbon(aes_string(x = "Week", ymin = y_low, ymax = y_upp), alpha = 0.25) 
+            res <- res + geom_ribbon(aes_string(x = "Week", ymin = y_low, ymax = y_upp), alpha = 0.25, fill = viridis(15)[7]) + theme_bw()
           return(res)
       })
 
