@@ -8,6 +8,7 @@ library(grid)
 library(png)
 library(shinyalert)
 library(readxl)
+library(viridis)
 
 
 
@@ -44,7 +45,7 @@ leaflet_tiles <- "CartoDB.Positron"
 leaflet_tiles <- "Stamen.Watercolor"
 leaflet_tiles <- "OpenStreetMap"
 
-# HIghlight option
+# Highlight option
 h_options <- highlightOptions(color = "white", weight = 2,
   bringToFront = TRUE)
 
@@ -412,9 +413,9 @@ server <- function(input, output, session) {
   plot_weekly_REM_median <- function(tab) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess)) +
-      geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.25) + 
+      geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.4, fill = viridis(15)[7]) + 
       xlab("Time") +
-      ylab("Relative excess mortality (median)") +
+      ylab("Relative excess mortality") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
       geom_hline(yintercept = 0, col ="red", linetype = "dashed") +
@@ -445,9 +446,9 @@ server <- function(input, output, session) {
   plot_weekly_NED_median <- function(tab) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess.deaths)) +
-      geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.25) +
+      geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.4, fill = viridis(15)[7]) +
       xlab("Time") +
-      ylab("Number of excess deaths (median)") +
+      ylab("Number of excess deaths") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
       geom_hline(yintercept = 0, col ="red", linetype = "dashed") +
