@@ -417,7 +417,8 @@ server <- function(input, output, session) {
       ylab("Relative excess mortality (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
-      geom_hline(yintercept = 0, col ="red", linetype = "dashed")
+      geom_hline(yintercept = 0, col ="red", linetype = "dashed") +
+      theme_bw()
 
       
 
@@ -430,7 +431,8 @@ server <- function(input, output, session) {
      xlab("Time") +
      ylab("Relative excess mortality (posterior probability)") + 
      scale_x_continuous(breaks = euro_xaxis$weekID,
-        labels = euro_xaxis$month.an,expand = c(0, 0))
+        labels = euro_xaxis$month.an,expand = c(0, 0)) +
+     theme_bw()
 
    return(plt)
   }
@@ -448,7 +450,8 @@ server <- function(input, output, session) {
       ylab("Number of excess deaths (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
-      geom_hline(yintercept = 0, col ="red", linetype = "dashed")
+      geom_hline(yintercept = 0, col ="red", linetype = "dashed") +
+      theme_bw()
 
 
     return(plt)
@@ -460,7 +463,8 @@ server <- function(input, output, session) {
      xlab("Time") +
      ylab("Number of excess deaths (posterior probability)") +
      scale_x_continuous(breaks = euro_xaxis$weekID,
-        labels = euro_xaxis$month.an,expand = c(0, 0))
+        labels = euro_xaxis$month.an,expand = c(0, 0)) +
+     theme_bw()
    
    return(plt)
   }
