@@ -180,7 +180,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
          tags$style(type = "text/css", "#leaflettseries {height: calc(100vh - 230px) !important;}"),
           shinycssloaders::withSpinner(leafletOutput("spacetimeplot"),
             type = 6, color = "#990033"),
-          HTML("The map shows the estimates of the variable for the whole of 2020. <b>Click on a region</b> to see the weekly values of the variable.")
+         fluidPage(includeMarkdown("legend_spatiotemp.Rmd"))
          )
      ),
 #     tabItem(tabName = "ine",
