@@ -231,8 +231,12 @@ server <- function(input, output, session) {
           xlab("Week") +
           ylab(y_lab) +
           scale_x_continuous(breaks = euro_xaxis$weekID,
-            labels = euro_xaxis$month.an,expand = c(0, 0))
+            labels = euro_xaxis$month.an,expand = c(0, 0)) 
 
+       if(y_var %in% c("median.excess", "median.excess.deaths")) {
+         res <- res +
+            geom_hline(yintercept = 0, col ="red", linetype = "dashed")
+       }
           if(!is.null(y_low) )
             res <- res + geom_ribbon(aes_string(x = "Week", ymin = y_low, ymax = y_upp), alpha = 0.25) 
           return(res)
@@ -411,7 +415,10 @@ server <- function(input, output, session) {
       geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.25) + 
       ylab("Relative excess mortality (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
-        labels = euro_xaxis$month.an,expand = c(0, 0))
+        labels = euro_xaxis$month.an,expand = c(0, 0)) +
+      geom_hline(yintercept = 0, col ="red", linetype = "dashed")
+
+      
 
     return(plt)
   }
@@ -437,7 +444,9 @@ server <- function(input, output, session) {
       geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.25) +
       ylab("Number of excess deaths (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
-        labels = euro_xaxis$month.an,expand = c(0, 0))
+        labels = euro_xaxis$month.an,expand = c(0, 0)) +
+      geom_hline(yintercept = 0, col ="red", linetype = "dashed")
+
 
     return(plt)
   }
