@@ -228,7 +228,7 @@ server <- function(input, output, session) {
         aux <- filter(tab, .data[[geo.var]] == ID)
 
         res <- ggplot(aux) + geom_line(aes_string(x = "Week", y = y_var)) +
-          xlab("Week") +
+          xlab("Time") +
           ylab(y_lab) +
           scale_x_continuous(breaks = euro_xaxis$weekID,
             labels = euro_xaxis$month.an,expand = c(0, 0)) 
@@ -413,6 +413,7 @@ server <- function(input, output, session) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess)) +
       geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.25) + 
+      xlab("Time") +
       ylab("Relative excess mortality (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
@@ -426,6 +427,7 @@ server <- function(input, output, session) {
   plot_weekly_REM_pprob <- function(tab) {
     plt <- ggplot(tab) +
      geom_line(aes(x = Week, y = ExProb)) +
+     xlab("Time") +
      ylab("Relative excess mortality (posterior probability)") + 
      scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0))
@@ -442,6 +444,7 @@ server <- function(input, output, session) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess.deaths)) +
       geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.25) +
+      xlab("Time") +
       ylab("Number of excess deaths (median)") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0)) +
@@ -454,6 +457,7 @@ server <- function(input, output, session) {
   plot_weekly_NED_pprob <- function(tab) {
     plt <- ggplot(tab) +
      geom_line(aes(x = Week, y = ExProb.deaths)) +
+     xlab("Time") +
      ylab("Number of excess deaths (posterior probability)") +
      scale_x_continuous(breaks = euro_xaxis$weekID,
         labels = euro_xaxis$month.an,expand = c(0, 0))
