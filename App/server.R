@@ -158,7 +158,17 @@ server <- function(input, output, session) {
 
   output$tabspsummary <- renderTable({
     #print("Show table")
-    tab <- summary_table(get_age_sex_data()) #st_drop_geometry(get_age_sex_data())
+
+    tab <- summary_table(get_age_sex_data())
+
+    # If nation data, show just a row
+    if(input$aggregation == "country") {
+      tab <- tab[1, , drop = FALSE]
+      row.names(tab) <- ""
+    }
+
+    #tab <- summary_table(get_age_sex_data())
+    tab
     #print(tab)
    }, rownames = TRUE) #options = list(autoWidth = TRUE, scrollX = TRUE))
 
