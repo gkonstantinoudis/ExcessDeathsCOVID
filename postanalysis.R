@@ -15,10 +15,11 @@ cluster = F
 
 
 #### Set the WD and load all the necessary data/functions ####
-setwd("") 
+setwd(".") 
 source("newfunctions.R")
 
-path2save ="./Output/"
+#path2save ="./Output/"
+path2save ="."
 
 # this table is needed for the caterpilar plot
 link_table = readRDS("./data/link_caterpilar") 
@@ -37,7 +38,7 @@ link_table = readRDS("./data/link_caterpilar")
 # the link between NUTS2 AND NUTS3
 
 
-pois.samples.list = readRDS("./Output/poisson_samples_all") #samples from the inla model (see Step 5. of model.run.R)
+pois.samples.list = readRDS("../1YCOVID/poisson_samples_all") #samples from the inla model (see Step 5. of model.run.R)
 finaldb = readRDS("./data/finaldb") #original data
 
 
@@ -145,6 +146,7 @@ xaxis <- xaxis[!duplicated(xaxis$month.an),]
 # start the plotting
 p_list <- list()
 
+
 for(i in 1:length(nam.title)){
   p_list[[i]] = PlotTimeSeries(dat = data4plot[[i]], 
                                lcol = lcol,
@@ -177,6 +179,13 @@ dev.off()
 library(png)
 
 p_list_png <- lapply(p_list, function(X) {
+  # Change font size
+  X <- X +
+    theme(axis.text.x = element_text(size = rel(2)),
+      axis.text.y = element_text(size = rel(2)),
+      plot.title = element_text(size = rel(2))
+    )
+
   ff <-  tempfile(fileext=".png")
   ggsave(ff, X)
   readPNG(ff)
