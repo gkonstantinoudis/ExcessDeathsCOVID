@@ -321,7 +321,9 @@ server <- function(input, output, session) {
 
     popup <- create_popup (mymap, tab)
 
-    colors <- rev(brewer.pal(n = 3, name = "RdBu"))
+    #colors <- rev(brewer.pal(n = 3, name = "RdBu"))
+    # Colours as in paper
+    colors <- rev(brewer.pal(n = 11, name = "RdBu")[c(2, 4, 6, 8, 10)])
     labels <- levels(mymap$ex.deaths.cat)
     factpal <- colorFactor(colors, mymap$ex.deaths.cat)
 

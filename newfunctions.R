@@ -719,13 +719,21 @@ compute.excess = function(data,divide.by,remove.covid=NULL,geo.name){
     # Compute exc. prob. and median/ex. categories
     xs$ExProb = apply(select(xs, starts_with("xs")) > 0, 1, mean)
     xs$Median.cat = cut(xs$median.excess,
-      breaks = c(-100, -0.15, -0.05, 0, 0.05, 0.15, 100),
-      labels = c("-15<", "[-15, -5)", "[-5, 0)",
-        "[0, 5)", "[5, 15)", "15>"),
+      #breaks = c(-100, -0.15, -0.05, 0, 0.05, 0.15, 100),
+      #labels = c("-15<", "[-15, -5)", "[-5, 0)",
+      #  "[0, 5)", "[5, 15)", "15>"),
+      # Cuts used in paper
+      breaks = c(-100, 0, 0.05, 0.10, 0.15, 0.20, 100),
+      labels = c("0%<", "[0%, 5%)", "[5%, 10%)",
+        "[10%, 15%)", "[15%, 20%)", "20%>"),
       include.lowest = TRUE, right = FALSE)
-    xs$ex.cat = cut(xs$ExProb, breaks = c(0, 0.20, 0.80, 1.01),
-      labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
-      include.lowest = TRUE, right = FALSE)
+    xs$ex.cat = cut(xs$ExProb, 
+      #breaks = c(0, 0.20, 0.80, 1.01),
+      #labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
+      # Cuts used in paper
+      breaks = c(-0.01, 0.05, 0.20, 0.80, 0.95, 1.01),
+      labels = c("[0, 0.05]", "(0.05, 0.2]", "(0.2, 0.8]", "(0.8, 0.95]", "(0.8, 1]"),
+      include.lowest = FALSE, right = FALSE)
 
     return(xs)
 }
@@ -781,8 +789,12 @@ compute.excess.deaths = function(data, remove.covid = NULL, geo.name){
       labels = c("-1000<", "[-1000, -500)", "[-500, -100)", "[-100, 0)",
         "[0, 100)", "[100, 500)", "[500, 1000)", "1000>"),
       include.lowest = TRUE, right = FALSE)
-    xs$ex.deaths.cat = cut(xs$ExProb.deaths, breaks = c(0, 0.20, 0.80, 1.01),
-      labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
+    xs$ex.deaths.cat = cut(xs$ExProb.deaths, 
+      # Cuts as in relative excess for consistency
+      breaks = c(-0.01, 0.05, 0.20, 0.80, 0.95, 1.01),
+      labels = c("[0, 0.05]", "(0.05, 0.2]", "(0.2, 0.8]", "(0.8, 0.95]", "(0.8, 1]"),
+      #breaks = c(0, 0.20, 0.80, 1.01),
+      #labels = c("[0, 0.2]", "(0.2, 0.8]", "(0.8, 1]"),
       include.lowest = TRUE, right = FALSE)
 
     return(xs)
