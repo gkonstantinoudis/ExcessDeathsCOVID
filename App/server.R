@@ -99,8 +99,11 @@ server <- function(input, output, session) {
    updateSelectInput(session, "gender", "Gender",
      list("Both" = "B", "Females" = "F", "Males" = "M"), selected = "F")
    updateSelectInput(session, "agegroup", "Age Group", 
-     c("All", "40<", "40-59", "60-69", "70-79", "80+"),
-     selected = "40<")
+     #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+     #selected = "40<")
+     # 40< not shown but are included in 'All'
+     c("All", "40-59", "60-69", "70-79", "80+"),
+     selected = "40-59")
     }
 
   })

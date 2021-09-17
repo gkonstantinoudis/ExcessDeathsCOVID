@@ -68,7 +68,10 @@ ui <- dashboardPage(title = "Excess Mortality App",
       selected = "Switzerland"),
     selectInput("gender", "Gender", list("Both" = "B", "Females" = "F", "Males" = "M"),
       selected = "Females"),
-    selectInput("agegroup", "Age Group", c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+    #selectInput("agegroup", "Age Group", c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+    # 40< results now shown because of small observed cases
+    # however, they are included in 'All'
+    selectInput("agegroup", "Age Group", c("All", "40-59", "60-69", "70-79", "80+"),
       selected = "All"),
     selectInput("aggregation", "Aggregation", list("National"  = "country", "Region (NUTS2)" = "region", "Province (NUTS3)" = "province"), selected = "province")
   ),
