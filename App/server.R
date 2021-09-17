@@ -65,9 +65,10 @@ server <- function(input, output, session) {
 
   # Load data
   observeEvent(input$country, {
-    print("Load data")
+    print("START: Load data")
     rv$data <- mget(load(paste0("data/", input$country, ".RData")))
     rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
+    print("END: Load data")
 
   }) # End: Load data
 
