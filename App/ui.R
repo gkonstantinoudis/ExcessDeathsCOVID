@@ -148,7 +148,8 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
      tabItem(tabName = "tmpexcess",
        fluidPage(
          h4("Excess Mortality"),
-         plotlyOutput("excessplot")
+         plotlyOutput("excessplot"),
+         fluidPage(includeMarkdown("legend_temp.Rmd"))
          )
      ),
      tabItem(tabName = "tmpexcess2",

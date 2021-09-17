@@ -413,7 +413,7 @@ server <- function(input, output, session) {
   plot_weekly_REM_median <- function(tab) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess)) +
-      geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.4, fill = viridis(15)[7]) + 
+      geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.2, fill = viridis(15)[7]) + 
       xlab("Time") +
       ylab("Relative excess mortality") +
       scale_x_continuous(breaks = euro_xaxis$weekID,
@@ -446,7 +446,7 @@ server <- function(input, output, session) {
   plot_weekly_NED_median <- function(tab) {
     plt <- ggplot(tab) +
       geom_line(aes(x = Week, y = median.excess.deaths)) +
-      geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.4, fill = viridis(15)[7]) +
+      geom_ribbon(aes(x = Week, ymin = low.excess.deaths, ymax = upp.excess.deaths), alpha = 0.2, fill = viridis(15)[7]) +
       xlab("Time") +
       ylab("Number of excess deaths") +
       scale_x_continuous(breaks = euro_xaxis$weekID,

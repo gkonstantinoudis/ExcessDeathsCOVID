@@ -1,0 +1,1 @@
+The dark line represents the statistic of the variable being plotted and the shaded region (if shown) are 95% credible intervals.
