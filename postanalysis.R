@@ -115,6 +115,8 @@ apply(expand.grid(age = c("40<", "40-59", "60-69", "70-79", "80+"),
       function(X) paste(X[2], X[1], sep = " ")) -> nam.title
 #check the labels with groups4cv and names(out)
 
+
+if(FALSE) { # Do not run to change ylim's
 # Specify the yaxis limits:
 ylimsmin <- rep(c(min(c(data4plot$`F40<`$`2.5%`, data4plot$`M40<`$`2.5%`))*0.5, 
                   min(c(data4plot$`F40-59`$`2.5%`, data4plot$`M40-59`$`2.5%`))*0.5, 
@@ -135,6 +137,8 @@ ylimsmax <- rep(c(max(c(data4plot$`F40<`$`97.5%`,   data4plot$`M40<`$`97.5%`,
                     max(c(data4plot$`F80+`$`97.5%`,   data4plot$`M80+`$`97.5%`,
                           data4plot$`F80+`$observed, data4plot$`M80+`$observed))*1.3),
                   times = 2)
+}
+
 
 # get the months as the xaxis
 xaxis = EUROSTAT %>% 
@@ -154,7 +158,8 @@ for(i in 1:length(nam.title)){
                                dat_true = data4plot[[i]], 
                                main.title = nam.title[i], 
                                lockdowns = lockdowns_weekID) +
-    ylim(c(ylimsmin[i], ylimsmax[i])) + 
+    # Do not change ylims
+    #ylim(c(ylimsmin[i], ylimsmax[i])) + 
     scale_x_continuous(breaks = xaxis$weekID, labels = xaxis$month.an,expand = c(0, 0)) + 
     theme(
       axis.text.y = element_text(size=7), 
