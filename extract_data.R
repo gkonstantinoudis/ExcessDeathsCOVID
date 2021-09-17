@@ -24,11 +24,12 @@ agesex_grps$IDX <- 1:nrow(agesex_grps)
 # Load data
 DB <- list()
 # Country names using ISO code
-DB$CHE <- readRDS("data/CHE/poisson_samples_all")
+#DB$CHE <- readRDS("data/CHE/poisson_samples_all")
+DB$CHE <- readRDS("../1YCOVID//poisson_samples_all")
 
 # Read maps
 MAPS <- list()
-MAPS$CHE <- st_read("data/CHE/shp.shp") #readOGR("data/CHE/shp.shp")
+MAPS$CHE <- st_read("data/shp.shp") #readOGR("data/CHE/shp.shp")
 MAPS$CHE <- st_transform(MAPS$CHE, '+proj=longlat +datum=WGS84') 
 
 # Number of weeks
@@ -38,11 +39,11 @@ n.weeks <- length(unique(DB$CHE[[1]]$EURO_LABEL))
 n.regions <- nrow(MAPS$CHE)
 
 # Link table
-link_table = readRDS("./data/CHE/link_caterpilar")
+link_table = readRDS("./data/link_caterpilar")
 
 
 # Load functions (written by Akis)
-source("../newfunctions.R")
+source("newfunctions.R")
 
 
 # Merge map and link table
