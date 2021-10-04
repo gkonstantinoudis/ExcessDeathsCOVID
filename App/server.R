@@ -56,7 +56,7 @@ server <- function(input, output, session) {
       detail = "This may take a few seconds.", value = 0, {
       rv$data <- mget(load(paste0("data/", input$country, ".RData")))
       incProgress(1/4)
-      rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
+      #rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
    })
     datasource <- switch(input$country, 
       England = "<a href = \"https://www.ons.gov.uk\">Office for National Statistics (ONS)</a>",
@@ -477,16 +477,19 @@ server <- function(input, output, session) {
       "80+" = 5
     )
 
-    outfile <- tempfile(fileext = '.png')
+    #outfile <- tempfile(fileext = '.png')
+    #
+    #writePNG(rv$tmp_plots[[idx]], outfile)
 
-    writePNG(rv$tmp_plots[[idx]], outfile)
+    outfile <- paste0("www/temp_plots/", input$country, "_", idx, ".png") 
+    print(outfile)
 
     list(src = outfile,
          contentType = 'image/png',
          width = 400,
          height = 400,
          alt = "Observed and excess mortality.")
-  }, deleteFile = TRUE)
+  }, deleteFile = FALSE)
 
 
   output$tabstsummary <- renderTable({
