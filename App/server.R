@@ -482,7 +482,6 @@ server <- function(input, output, session) {
     #writePNG(rv$tmp_plots[[idx]], outfile)
 
     outfile <- paste0("www/temp_plots/", input$country, "_", idx, ".png") 
-    print(outfile)
 
     list(src = outfile,
          contentType = 'image/png',
