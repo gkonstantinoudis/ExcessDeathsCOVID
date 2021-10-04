@@ -23,26 +23,12 @@ if(system("hostname", intern = TRUE) == "atlasmortalidad.uclm.es") {
 # Load some functions
 source("utils.R")
 
-# Check
-print("Reading server.R")
-
 # Source week data
 source("read_eurostat.R")
 
-#Load
-#load("extract_data.RData")
-
-#country <- "Italy"
-#country <- "Greece"
-#country <- "Switzerland"
-#load(paste0("data/", country, ".RData"))
-#load(paste0("data/", country, "_p_list.RData"))
-
-print("----------DATA LOADED-----------")
-
-# LEaflet tiles
-leaflet_tiles <- "CartoDB.Positron"
-leaflet_tiles <- "Stamen.Watercolor"
+# Leaflet tiles
+#leaflet_tiles <- "CartoDB.Positron"
+#leaflet_tiles <- "Stamen.Watercolor"
 leaflet_tiles <- "OpenStreetMap"
 
 # Highlight option
@@ -66,9 +52,12 @@ server <- function(input, output, session) {
   # Load data
   observeEvent(input$country, {
     print("START: Load data")
-    rv$data <- mget(load(paste0("data/", input$country, ".RData")))
-    rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
-
+    withProgress(message = paste("Loading data from ", input$country, "."),
+      detail = "This may take a few seconds.", value = 0, {
+      rv$data <- mget(load(paste0("data/", input$country, ".RData")))
+      incProgress(1/2)
+      rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
+   })
     datasource <- switch(input$country, 
       England = "<a href = \"https://www.ons.gov.uk\">Office for National Statistics (ONS)</a>",
       Greece = "<a href=\"https://www.statistics.gr/en/home/\">Hellenic Statistical Authority (ELSTAT)</a>",
@@ -79,13 +68,12 @@ server <- function(input, output, session) {
     output$datasource <- renderUI({
       HTML(paste0("<P>Source of mortality data: ", datasource, ".<P>"))
     })
-    print(rv$datasource)
    
     print("END: Load data")
 
   }) # End: Load data
 
-  # Observe what tab is being selected
+  # Observe which tab is being selected
   # This is used to set the values in the selection
   observe({
     tabs <- input$tabs
@@ -170,8 +158,6 @@ server <- function(input, output, session) {
 
 
   output$tabspsummary <- renderTable({
-    #print("Show table")
-
     tab <- summary_table(get_age_sex_data())
 
     # If nation data, show just a row
@@ -180,17 +166,8 @@ server <- function(input, output, session) {
       row.names(tab) <- ""
     }
 
-    #tab <- summary_table(get_age_sex_data())
     tab
-    #print(tab)
-   }, rownames = TRUE) #options = list(autoWidth = TRUE, scrollX = TRUE))
-
-#  output$tabspsummary <- renderDataTable({
-#    print("Show table")
-#    tab <- st_drop_geometry(get_age_sex_data())
-#     data.frame("Relative excess mortality (median)" = mean(tab$median.excess))
-#   }, options = list(autoWidth = TRUE, scrollX = TRUE))
-
+   }, rownames = TRUE) 
 
   # Create pop-ups for maps
   # mymap: Spatial information
@@ -200,9 +177,7 @@ server <- function(input, output, session) {
 
     if(is.null(tab)) {
       popup <- paste0(
-        #paste("<b>ID_PE</b> ", mymap$ID_PE, sep = ""), "<br>",
         paste(paste0("<b>Name:</b> ", mymap$NAME, "<br>")),
-        #paste(paste0("<b>Deaths:</b> ", mymap$deaths, "<br>")),
         paste(paste0("<b>Relative Excess Deaths (median):</b> ", round(mymap$median.excess, 2)), "<br>"),
         paste(paste0("<b>Relative Excess Deaths (95% c.i.):</b> ", paste0("(", round(mymap$low.excess, 2), ", ", round(mymap$upp.excess, 2), ")")), "<br>"),
         paste(paste0("<b>Relative Excess Deaths (post. prob.):</b> ", round(mymap$ExProb, 2), "<br>")),
@@ -212,7 +187,6 @@ server <- function(input, output, session) {
         paste(paste0("<b>Age Group:</b> ", input$agegroup, "<br>")),
         paste(paste0("<b>Sex:</b> ", 
           ifelse(input$sex == "B", "Both", ifelse(input$sesex == "F", "Females", "Males")), "<br>"))
-        #paste(paste0("<b>Population:</b> ", round(mymap$population, 2)))
       )
     } else { # Temporal pop-up
 
@@ -267,8 +241,6 @@ server <- function(input, output, session) {
           return(res)
       })
 
-      #print(length(plts))
-
       popup <- popupGraph(plts)
     }
 
@@ -285,7 +257,6 @@ server <- function(input, output, session) {
 
     mymap <- get_age_sex_data()
 
-    #colors <- c(rev(brewer.pal(n = 6, name = "RdBu")))
     # Colours as in paper
     colors <- rev(brewer.pal(n = 10, name = "RdBu")[1:6])
     labels <- levels(mymap$Median.cat)
@@ -295,7 +266,6 @@ server <- function(input, output, session) {
       popup <- create_popup (mymap, tab)
     #))
     #print(paste0("Object size of popups:", object.size(popup)))
-    #popup <- NULL
 
     res <- leaflet(mymap) %>% 
       addProviderTiles(leaflet_tiles,
@@ -314,7 +284,6 @@ server <- function(input, output, session) {
 
     popup <- create_popup (mymap, tab)
   
-    #colors <- rev(brewer.pal(n = 3, name = "RdBu"))
     # Colours as in paper
     colors <- rev(brewer.pal(n = 11, name = "RdBu")[c(2, 4, 6, 8, 10)])
     labels <- levels(mymap$ex.cat)
@@ -344,7 +313,6 @@ server <- function(input, output, session) {
     factpal <- colorFactor(colors, mymap$Median.deaths.cat)
     
     popup <- create_popup (mymap, tab)
-    #popup <- NULL
     
     res <- leaflet(mymap) %>% 
       addProviderTiles(leaflet_tiles,
@@ -352,8 +320,6 @@ server <- function(input, output, session) {
       addPolygons(fillColor = ~ factpal(Median.deaths.cat), weight = 1, opacity = 1, color = "black", fillOpacity = 0.75, popup = popup, highlightOptions = h_options) %>%   
       leaflet::addLegend("topright", colors = colors, labels = labels,
          values = values)
-    
-
   }
 
   # tab: Tab for popups
@@ -363,7 +329,6 @@ server <- function(input, output, session) {
 
     popup <- create_popup (mymap, tab)
 
-    #colors <- rev(brewer.pal(n = 3, name = "RdBu"))
     # Colours as in paper
     colors <- rev(brewer.pal(n = 11, name = "RdBu")[c(2, 4, 6, 8, 10)])
     labels <- levels(mymap$ex.deaths.cat)
@@ -400,37 +365,10 @@ server <- function(input, output, session) {
   })
 
 
-#  output$leafletpprob <- renderLeaflet({
-#
-#    
-#   mymap <- get_age_sex_data()
-#   
-#   popup <- create_popup (mymap)
-#   #popup <- NULL
-#   
-#   #warning("reproject data before loading the App")
-#   #mymap <- st_transform(mymap, '+proj=longlat +datum=WGS84')
-#   
-#   colors <- rev(brewer.pal(n = 3, name = "RdBu"))
-#   labels <- levels(mymap$ex.cat)
-#   factpal <- colorFactor(colors, mymap$ex.cat)
-#    
-#    res <- leaflet(mymap) %>% 
-#      addProviderTiles(leaflet_tiles,
-#          options = providerTileOptions(opacity = 0.99))  %>% 
-#      addPolygons(fillColor = ~ factpal(ex.cat), weight = 1, opacity = 1, color = "black", fillOpacity = 0.75, popup = popup, highlightOptions = h_options) %>%
-#      leaflet::addLegend("topright", colors = colors, labels = labels,
-#         values = values)
-#    
-#    return(res)
-#  })
-
   output$tabtmpsummary <- renderTable({
 
-    tab <- summary_table(get_age_sex_data(weekly = TRUE)) #st_drop_geometry(get_age_sex_data())
-    #print(tab)
-   }, rownames = TRUE) #options = list(autoWidth = TRUE, scrollX = TRUE))
-
+    tab <- summary_table(get_age_sex_data(weekly = TRUE)) 
+   }, rownames = TRUE)
 
 
   plot_weekly_REM_mean <- function(tab) {
@@ -448,10 +386,9 @@ server <- function(input, output, session) {
       geom_hline(yintercept = 0, col ="red", linetype = "dashed") +
       theme_bw()
 
-      
-
     return(plt)
   }
+
 
   plot_weekly_REM_pprob <- function(tab) {
     plt <- ggplot(tab) +
@@ -469,6 +406,7 @@ server <- function(input, output, session) {
   plot_weekly_NED_mean <- function(tab) {
     return(NULL)
   }
+
 
   plot_weekly_NED_median <- function(tab) {
     plt <- ggplot(tab) +
@@ -498,26 +436,6 @@ server <- function(input, output, session) {
   }
 
 
-  
-
-#  output$mortalityplot <- renderPlotly({
-#    tab <- get_age_sex_data(weekly = TRUE)
-#    tab$Week <- as.integer(substr(tab$EURO_LABEL, 7,8))
-#
-#    if(input$aggregation == "country")
-#    plt <- ggplot(tab) +
-#     geom_line(aes(x = Week, y = observed))
-#
-#     if(input$aggregation == "region")
-#       plt <- ggplot(tab) + geom_line(aes(x = Week, y = observed, group = RegionID, col = RegionID))
-#
-#     if(input$aggregation == "province")
-#       plt <- ggplot(tab) + geom_line(aes(x = Week, y = observed, group = ID_space, col = ID_space))
-#
-#
-#    ggplotly(plt)
-#  })
-
 
   # IMPORTANT: Only NATIONAL DATA is shown here
   output$excessplot <- renderPlotly({
@@ -538,23 +456,6 @@ server <- function(input, output, session) {
         pprob = plot_weekly_NED_pprob(tab)
       )
     }
-
-#    if(input$aggregation == "country") {
-#    plt <- ggplot(tab) +
-#     geom_line(aes(x = Week, y = mean.excess)) +
-#     geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.25)
-#   }
-
-   #if(input$aggregation == "region") {
-   #  plt <- ggplot(tab) +
-   #    geom_line(aes(x = Week, y = mean.excess, group = RegionID, col = RegionID)) 
-   #}
-   #
-   #if(input$aggregation == "province") {
-   #  plt <- ggplot(tab) +
-   #    geom_line(aes(x = Week, y = mean.excess, group = ID_space, col = ID_space))
-#
-#   }
 
     ggplotly(the_plot)
   })
@@ -587,45 +488,9 @@ server <- function(input, output, session) {
          alt = "Observed and excess mortality.")
   }, deleteFile = TRUE)
 
-#   output$pprobplot <- renderPlotly({
-#
-#   # Set national for this case
-#   #updateSelectInput(session, "inSelect",
-#   #   label = paste("Select input label", length(x)),
-#   #   choices = x,
-#   #   selected = tail(x, 1)
-#   # )
-#
-#
-#    tab <- get_age_sex_data(weekly = TRUE)
-#    tab$Week <- as.integer(substr(tab$EURO_LABEL, 7,8))
-#
-#    if(input$aggregation == "country") {
-#    plt <- ggplot(tab) +
-#     geom_line(aes(x = Week, y = ExProb))
-#   }
-#
-#   if(input$aggregation == "region") {
-#     plt <- ggplot(tab) +
-#       geom_line(aes(x = Week, y = ExProb, group = RegionID, col = RegionID))
-#   }
-#
-#   if(input$aggregation == "province") {
-#     plt <- ggplot(tab) +
-#       geom_line(aes(x = Week, y = ExProb, group = ID_space, col = ID_space))
-#   
-#   }
-#
-#    ggplotly(plt)
-#
-#  })
-#
-
 
   output$tabstsummary <- renderTable({
-    #print("Show table")
-    tab <- summary_table(get_age_sex_data(weekly = TRUE)) #st_drop_geometry(get_age_sex_data())
-    print(tab)
+    tab <- summary_table(get_age_sex_data(weekly = TRUE)) 
    }, rownames = TRUE) #options = list(autoWidth = TRUE, scrollX = TRUE))
 
   
@@ -640,26 +505,7 @@ server <- function(input, output, session) {
     tab$Week <- as.integer(substr(tab$EURO_LABEL, 7,8))
 
 
-#    if(input$aggregation == "country") geo.var <- "COUNTRY"
-#    if(input$aggregation == "region") geo.var <- "RegionID"
-#    if(input$aggregation == "province") geo.var <- "ID_space"
-#
-#    # Produce plot
-#    plts <- lapply(unlist(st_drop_geometry(map[, geo.var])), function(ID) {
-#      aux <- filter(tab, .data[[geo.var]] == ID)
-#
-#      ggplot(aux) + geom_line(aes(x = Week, y = median.excess))+
-#        geom_ribbon(aes(x = Week, ymin = low.excess, ymax = upp.excess), alpha = 0.25) +
-#      xlab("Week") + 
-#      ylab("Relative excess mortality (median)")
-#    })
-#
-#    print(length(plts))
-#
-#    plts <- popupGraph(plts)
-
-
-  if(input$variable == "REM") {
+    if(input$variable == "REM") {
       the_plot <- switch(input$statistic,
         mean = map_REM_mean(tab),
         median = map_REM_median(tab),
@@ -676,28 +522,28 @@ server <- function(input, output, session) {
     return(the_plot)
 
 
-     kk <-  map_REM_median(tab)
-     return(kk)
-
-     plts <- create_popup(map, tab)
-
-     colors <- c(rev(brewer.pal(n = 6, name = "RdBu")))
-     labels <- levels(map$Median.cat)
-     factpal <- colorFactor(colors, map$Median.cat)
-    
-      res <- leaflet(map) %>% 
-      addProviderTiles(leaflet_tiles,
-          options = providerTileOptions(opacity = 0.99))  %>% 
-      addPolygons(fillColor = ~ factpal(Median.cat), weight = 1, opacity = 1, color = "black", fillOpacity = 0.75, popup = plts, highlightOptions = h_options) %>%   
-      leaflet::addLegend("topright", colors = colors, labels = labels,
-         values = values)
-    
-    return(res)
-
+#     kk <-  map_REM_median(tab)
+#     return(kk)
+#
+#     plts <- create_popup(map, tab)
+#
+#     colors <- c(rev(brewer.pal(n = 6, name = "RdBu")))
+#     labels <- levels(map$Median.cat)
+#     factpal <- colorFactor(colors, map$Median.cat)
+#    
+#      res <- leaflet(map) %>% 
+#      addProviderTiles(leaflet_tiles,
+#          options = providerTileOptions(opacity = 0.99))  %>% 
+#      addPolygons(fillColor = ~ factpal(Median.cat), weight = 1, opacity = 1, color = "black", fillOpacity = 0.75, popup = plts, highlightOptions = h_options) %>%   
+#      leaflet::addLegend("topright", colors = colors, labels = labels,
+#         values = values)
+#    
+#    return(res)
+#
 
 
   })
 
 
 
-}
+} # server
