@@ -32,11 +32,6 @@ mymap <- do.call(rbind, res)
 
 plot(mymap)
 
-# Add Median.cat at random to test
-mymap$Median.cat <- as.factor(
-  sample(levels(res[[4]]$Median.cat), nrow(mymap), rep = TRUE)
-)
-
 colors <- rev(brewer.pal(n = 10, name = "RdBu")[1:6])
 labels <- levels(mymap$Median.cat)
 factpal <- colorFactor(colors, mymap$Median.cat)
