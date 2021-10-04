@@ -55,7 +55,7 @@ server <- function(input, output, session) {
     withProgress(message = paste("Loading data from ", input$country, "."),
       detail = "This may take a few seconds.", value = 0, {
       rv$data <- mget(load(paste0("data/", input$country, ".RData")))
-      incProgress(1/2)
+      incProgress(1/4)
       rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
    })
     datasource <- switch(input$country, 
