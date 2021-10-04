@@ -186,7 +186,7 @@ server <- function(input, output, session) {
         paste(paste0("<b>Number of Excess Deaths (post. prob.):</b> ", round(mymap$ExProb.deaths, 2), "<br>")),
         paste(paste0("<b>Age Group:</b> ", input$agegroup, "<br>")),
         paste(paste0("<b>Sex:</b> ", 
-          ifelse(input$sex == "B", "Both", ifelse(input$sesex == "F", "Females", "Males")), "<br>"))
+          ifelse(input$sex == "B", "Both", ifelse(input$sex == "F", "Females", "Males")), "<br>"))
       )
     } else { # Temporal pop-up
 
