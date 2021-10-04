@@ -157,6 +157,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
          h4("Observed and Estimated Number of Deaths"),
          #plotOutput("excessplot2"),
          imageOutput("excessplot2"),
+         htmlOutput("datasource"),
          HTML("<B>Please, select an <I>age</I> and <I>gender</I> group different from 'All' and 'Both', respectively</B>. Actual number of deaths are represented by the dark green line while estimated number of deaths (under the counterfactual of no pandemic) are shown in the black line. Credible intervals at different levels are shown using the shaded regions. Check paper for details.")
          )
      ),

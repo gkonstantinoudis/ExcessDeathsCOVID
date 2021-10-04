@@ -60,7 +60,7 @@ server <- function(input, output, session) {
   # Reactive data to be loaded when a country is selected
   rv <- reactiveValues(
     data = NULL, # Main data
-    tmp_plots = NULL # Plots of temporal trends
+    tmp_plots = NULL # Plots of temporal trends,
   )
 
   # Load data
@@ -68,6 +68,19 @@ server <- function(input, output, session) {
     print("START: Load data")
     rv$data <- mget(load(paste0("data/", input$country, ".RData")))
     rv$tmp_plots <- mget(load(paste0("data/", input$country, "_p_list.RData")))[[1]]
+
+    datasource <- switch(input$country, 
+      England = "<a href = \"https://www.ons.gov.uk\">Office for National Statistics (ONS)</a>",
+      Greece = "<a href=\"https://www.statistics.gr/en/home/\">Hellenic Statistical Authority (ELSTAT)</a>",
+      Italy = "<a href=\"https://www.istat.it/en/\">Instituto Nazionale di Statistica (ISTAT)</a>",      
+      Spain = "<a href=\"https://www.ine.es\">Instituto Nacional de Estadística (INE)</a>",
+      Switzerland = "<a href=\"https://www.bfs.admin.ch/bfs/de/home.html\">Bundesamt für Statistik (BFS)</a>"
+    )
+    output$datasource <- renderUI({
+      HTML(paste0("<P>Source of mortality data: ", datasource, ".<P>"))
+    })
+    print(rv$datasource)
+   
     print("END: Load data")
 
   }) # End: Load data
