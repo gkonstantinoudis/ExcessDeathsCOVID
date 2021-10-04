@@ -28,11 +28,11 @@ the posterior probability of NED being higher than zero. Both posterior probabil
 
 This App gives access to results at a finer resolution than the results presented in the paper. For this reason, for certain age and sex groups at certain NUTS3 areas the estimates may be unstable. Hence, you should interpret them with care or use a higher aggregation level instead.
 
-'Inf' values may appear for some NUTS3 areas (or weeks in the temporal plots) for some combinations of age and gender when the expected number of deaths is zero. These values should be interpreted as that there is not enough information as to provide reliable estimates of the observed number of deaths.
+'Inf' values may appear for some NUTS3 areas (or weeks in the temporal plots) for some combinations of age and sex when the expected number of deaths is zero. These values should be interpreted as that there is not enough information as to provide reliable estimates of the observed number of deaths.
 
 # How to use the App?
 
-Esentially, this App will allow you to navigate through the different excess mortality estimates discussed in the paper according to country, administrative level, age group and gender. The user can select these variables from the different drop-down menus on the left and the results can be accessed by clicking on the differnt tabs in the top-left part of the App. The different tabs are described below.
+Esentially, this App will allow you to navigate through the different excess mortality estimates discussed in the paper according to country, administrative level, age group and sex. The user can select these variables from the different drop-down menus on the left and the results can be accessed by clicking on the differnt tabs in the top-left part of the App. The different tabs are described below.
 
 
 * **Introduction**: Provides a summary of the App.

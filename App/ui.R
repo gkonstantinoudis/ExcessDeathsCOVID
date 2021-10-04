@@ -66,7 +66,7 @@ ui <- dashboardPage(title = "Excess Mortality App",
     ),
     selectInput("country", "Country", c("England", "Greece", "Italy", "Spain", "Switzerland"),
       selected = "Switzerland"),
-    selectInput("gender", "Gender", list("Both" = "B", "Females" = "F", "Males" = "M"),
+    selectInput("sex", "Sex", list("Both" = "B", "Females" = "F", "Males" = "M"),
       selected = "Females"),
     #selectInput("agegroup", "Age Group", c("All", "40<", "40-59", "60-69", "70-79", "80+"),
     # 40< results now shown because of small observed cases
@@ -158,7 +158,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
          #plotOutput("excessplot2"),
          imageOutput("excessplot2"),
          htmlOutput("datasource"),
-         HTML("<B>Please, select an <I>age</I> and <I>gender</I> group different from 'All' and 'Both', respectively</B>. Actual number of deaths are represented by the dark green line while estimated number of deaths (under the counterfactual of no pandemic) are shown in the black line. Credible intervals at different levels are shown using the shaded regions. Check paper for details.")
+         HTML("<B>Please, select an <I>age</I> and <I>sex</I> group different from 'All' and 'Both', respectively</B>. Actual number of deaths are represented by the dark green line while estimated number of deaths (under the counterfactual of no pandemic) are shown in the black line. Credible intervals at different levels are shown using the shaded regions. Check paper for details.")
          )
      ),
      tabItem(tabName = "tmppprob",

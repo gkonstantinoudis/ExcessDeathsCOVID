@@ -111,7 +111,7 @@ server <- function(input, output, session) {
       selected = "median"
     )
 
-   updateSelectInput(session, "gender", "Gender",
+   updateSelectInput(session, "sex", "Sex",
      list("Both" = "B", "Females" = "F", "Males" = "M"), selected = "F")
    updateSelectInput(session, "agegroup", "Age Group", 
      #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
@@ -135,16 +135,16 @@ server <- function(input, output, session) {
     # Main subset
     aux <- tab[[input$aggregation]]
 
-    if(input$gender == "B" & input$agegroup == "All")
+    if(input$sex == "B" & input$agegroup == "All")
       return(aux[[1]])
 
-    if(input$gender == "B") 
+    if(input$sex == "B") 
       return(aux[["age"]][[input$agegroup]])
 
     if(input$agegroup == "All")
-      return(aux[["sex"]][[input$gender]])
+      return(aux[["sex"]][[input$sex]])
 
-    return(aux[["agesex"]][[paste0(input$gender, input$agegroup)]])
+    return(aux[["agesex"]][[paste0(input$sex, input$agegroup)]])
   }
 
   # Create a summary table from an sf object
@@ -210,8 +210,8 @@ server <- function(input, output, session) {
         paste(paste0("<b>Number of Excess Deaths (95% c.i.):</b> ", paste0("(", round(mymap$low.excess.deaths, 2), ", ", round(mymap$upp.excess.deaths, 2), ")")), "<br>"),
         paste(paste0("<b>Number of Excess Deaths (post. prob.):</b> ", round(mymap$ExProb.deaths, 2), "<br>")),
         paste(paste0("<b>Age Group:</b> ", input$agegroup, "<br>")),
-        paste(paste0("<b>Gender:</b> ", 
-          ifelse(input$gender == "B", "Both", ifelse(input$gender == "F", "Females", "Males")), "<br>"))
+        paste(paste0("<b>Sex:</b> ", 
+          ifelse(input$sex == "B", "Both", ifelse(input$sesex == "F", "Females", "Males")), "<br>"))
         #paste(paste0("<b>Population:</b> ", round(mymap$population, 2)))
       )
     } else { # Temporal pop-up
@@ -291,7 +291,10 @@ server <- function(input, output, session) {
     labels <- levels(mymap$Median.cat)
     factpal <- colorFactor(colors, mymap$Median.cat)
 
-    popup <- create_popup (mymap, tab)
+    #print(system.time(
+      popup <- create_popup (mymap, tab)
+    #))
+    #print(paste0("Object size of popups:", object.size(popup)))
     #popup <- NULL
 
     res <- leaflet(mymap) %>% 
@@ -561,9 +564,9 @@ server <- function(input, output, session) {
     # Set index
     # Ordering is F 40>, F 40-..., etc.
     idx <- 0
-    if(input$gender == "B" | input$agegroup == "All") return(NULL)
+    if(input$sex == "B" | input$agegroup == "All") return(NULL)
 
-    if(input$gender == "M") idx <- 5
+    if(input$sex == "M") idx <- 5
 
     idx <- idx + switch(input$agegroup,
       "40<" = 1,
