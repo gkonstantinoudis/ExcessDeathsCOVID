@@ -522,8 +522,8 @@ server <- function(input, output, session) {
 
     list(src = outfile,
          contentType = 'image/png',
-         width = 400,
-         height = 400,
+         width = ifelse(input$country != "England",  400, 400 * 689 / 464),
+         height = ifelse(input$country != "England", 400, 400),
          alt = "Observed and excess mortality.")
   }, deleteFile = FALSE)
 
