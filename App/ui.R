@@ -71,7 +71,7 @@ ui <- dashboardPage(title = "Excess Mortality App",
     # however, they are included in 'All'
     selectInput("agegroup", "Age Group", c("All", "40-59", "60-69", "70-79", "80+"),
       selected = "All"),
-    selectInput("aggregation", "Aggregation", list("National"  = "country", "Region (NUTS2)" = "region", "Province (NUTS3)" = "province"), selected = "province")
+    selectInput("aggregation", "Aggregation", list("National"  = "country", "Region (NUTS2)" = "region", "Province (NUTS3)" = "province"), selected = "region")
   ),
   dashboardBody(
     tags$head(includeHTML(("google-analytics.html"))),
