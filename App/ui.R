@@ -130,7 +130,7 @@ tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !impo
          #plotOutput("excessplot2"),
          imageOutput("excessplot2"),
          htmlOutput("datasource"),
-         HTML("<B>Please, select an <I>age</I> and <I>sex</I> group different from 'All' and 'Both', respectively</B>. Actual number of deaths are represented by the dark green line while estimated number of deaths (under the counterfactual of no pandemic) are shown in the black line. Credible intervals at different levels are shown using the shaded regions. Check paper for details.")
+         HTML("<B>Please, select an <I>age</I> and <I>sex</I> group different from 'All' and 'Both', respectively</B>. Actual number of deaths are represented by the black line while estimated number of deaths (under the counterfactual of no pandemic) are shown in the dark green line. Credible intervals at different levels are shown using the shaded regions. Check paper for details.")
          )
      ),
      tabItem(tabName = "tmppprob",
