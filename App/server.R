@@ -92,7 +92,7 @@ server <- function(input, output, session) {
       updateSelectInput(session, "aggregation", "Aggregation",
        list("National"  = "country", "Region (NUTS2)" = "region",
          "Province (NUTS3)" = "province"),
-        selected = "country")
+        selected = input$country)
     }
 
     if(tabs == "tmpexcess2") { # Remove some options
@@ -101,22 +101,22 @@ server <- function(input, output, session) {
         list(#"Relative excess mortality" = "REM", 
           "Number of excess deaths" = "NED"),
         selected = "NED"
-    )
+      )
 
-    # Set median 
-    updateSelectInput(session, "statistic", "Statistic",
-      list("Median" = "median"), # "Posterior probability" = "pprob"),
-      selected = "median"
-    )
+      # Set median 
+      updateSelectInput(session, "statistic", "Statistic",
+        list("Median" = "median"), # "Posterior probability" = "pprob"),
+        selected = "median"
+      )
 
-   updateSelectInput(session, "sex", "Sex",
-     list("Females" = "F", "Males" = "M"), selected = "F")
-   updateSelectInput(session, "agegroup", "Age Group", 
-     #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
-     #selected = "40<")
-     # 40< not shown but are included in 'All'
-     c( "40-59", "60-69", "70-79", "80+"),
-     selected = "40-59")
+     updateSelectInput(session, "sex", "Sex",
+       list("Females" = "F", "Males" = "M"), selected = "F")
+     updateSelectInput(session, "agegroup", "Age Group", 
+       #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+       #selected = "40<")
+       # 40< not shown but are included in 'All'
+       c( "40-59", "60-69", "70-79", "80+"),
+       selected = "40-59")
 
     } else { # For all other tabs, use full options
 
@@ -124,22 +124,22 @@ server <- function(input, output, session) {
       updateSelectInput(session, "variable", "Variable",
         list("Relative excess mortality" = "REM",
         "Number of excess deaths" = "NED"), selected = input$variable
-    )
+      )
 
-    # Set median 
-    updateSelectInput(session, "statistic", "Statistic",
-      list("Median" = "median", "Posterior probability" = "pprob"),
-      selected = input$statistic
-    )
+      # Set median 
+      updateSelectInput(session, "statistic", "Statistic",
+        list("Median" = "median", "Posterior probability" = "pprob"),
+        selected = input$statistic
+      )
 
-   updateSelectInput(session, "sex", "Sex",
-     list("Both" = "B", "Females" = "F", "Males" = "M"), selected = "F")
-   updateSelectInput(session, "agegroup", "Age Group",
-     #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
-     #selected = "40<")
-     # 40< not shown but are included in 'All'
-     c("All", "40-59", "60-69", "70-79", "80+"),
-     selected = input$agegroup)
+     updateSelectInput(session, "sex", "Sex",
+       list("Both" = "B", "Females" = "F", "Males" = "M"), selected = "F")
+     updateSelectInput(session, "agegroup", "Age Group",
+       #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+       #selected = "40<")
+       # 40< not shown but are included in 'All'
+       c("All", "40-59", "60-69", "70-79", "80+"),
+       selected = input$agegroup)
 
     }
 
@@ -209,9 +209,12 @@ server <- function(input, output, session) {
 
   create_popup <- function(mymap, tab = NULL) {
 
+    # Fix for Greek names
+    name_col <- ifelse(input$country == "Greece" & input$aggregation == "province", "NAME_ENG", "NAME")
+
     if(is.null(tab)) {
       popup <- paste0(
-        paste(paste0("<b>Name:</b> ", mymap$NAME, "<br>")),
+        paste(paste0("<b>Name:</b> ", mymap[, name_col, drop = TRUE], "<br>")),
         paste(paste0("<b>Relative Excess Deaths (median):</b> ", round(mymap$median.excess, 2)), "<br>"),
         paste(paste0("<b>Relative Excess Deaths (95% CrI):</b> ", paste0("(", round(mymap$low.excess, 2), ", ", round(mymap$upp.excess, 2), ")")), "<br>"),
         paste(paste0("<b>Relative Excess Deaths, Pr(REM > 0) :</b> ", round(mymap$ExProb, 2), "<br>")),
