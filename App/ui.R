@@ -91,7 +91,8 @@ ui <- dashboardPage(title = "Excess Mortality App",
           h4("Excess mortality"),
 tags$style(type = "text/css", "#leafletexcess {height: calc(100vh - 110px) !important;}"),
             shinycssloaders::withSpinner(leafletOutput("leafletexcess"),
-              type = 6, color = "#990033")
+              type = 6, color = "#990033"),
+            includeMarkdown("legend_spatial.Rmd")
         )
       ),
       tabItem(tabName = "temporal", 

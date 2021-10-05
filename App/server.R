@@ -179,11 +179,11 @@ server <- function(input, output, session) {
       popup <- paste0(
         paste(paste0("<b>Name:</b> ", mymap$NAME, "<br>")),
         paste(paste0("<b>Relative Excess Deaths (median):</b> ", round(mymap$median.excess, 2)), "<br>"),
-        paste(paste0("<b>Relative Excess Deaths (95% c.i.):</b> ", paste0("(", round(mymap$low.excess, 2), ", ", round(mymap$upp.excess, 2), ")")), "<br>"),
-        paste(paste0("<b>Relative Excess Deaths (post. prob.):</b> ", round(mymap$ExProb, 2), "<br>")),
+        paste(paste0("<b>Relative Excess Deaths (95% CrI):</b> ", paste0("(", round(mymap$low.excess, 2), ", ", round(mymap$upp.excess, 2), ")")), "<br>"),
+        paste(paste0("<b>Relative Excess Deaths, Pr(REM > 0) :</b> ", round(mymap$ExProb, 2), "<br>")),
         paste(paste0("<b>Number of Excess Deaths (median):</b> ", round(mymap$median.excess.deaths, 2)), "<br>"),
-        paste(paste0("<b>Number of Excess Deaths (95% c.i.):</b> ", paste0("(", round(mymap$low.excess.deaths, 2), ", ", round(mymap$upp.excess.deaths, 2), ")")), "<br>"),
-        paste(paste0("<b>Number of Excess Deaths (post. prob.):</b> ", round(mymap$ExProb.deaths, 2), "<br>")),
+        paste(paste0("<b>Number of Excess Deaths (95% CrI):</b> ", paste0("(", round(mymap$low.excess.deaths, 2), ", ", round(mymap$upp.excess.deaths, 2), ")")), "<br>"),
+        paste(paste0("<b>Number of Excess Deaths, Pr(NED > 0):</b> ", round(mymap$ExProb.deaths, 2), "<br>")),
         paste(paste0("<b>Age Group:</b> ", input$agegroup, "<br>")),
         paste(paste0("<b>Sex:</b> ", 
           ifelse(input$sex == "B", "Both", ifelse(input$sex == "F", "Females", "Males")), "<br>"))
