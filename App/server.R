@@ -82,31 +82,65 @@ server <- function(input, output, session) {
     if(tabs %in% c("tmpsummary", "tmpexcess", "tmpexcess2")) {
       # National level
       updateSelectInput(session, "aggregation", "Aggregation",
+       list("National"  = "country"), #, "Region (NUTS2)" = "region",
+         #"Province (NUTS3)" = "province"),
+        selected = "country")
+
+      # Age sex selection
+    } else {
+      # Otehr tabs allow for other types of selection
+      updateSelectInput(session, "aggregation", "Aggregation",
        list("National"  = "country", "Region (NUTS2)" = "region",
-       "Province (NUTS3)" = "province"), selected = "country")
+         "Province (NUTS3)" = "province"),
+        selected = "country")
     }
 
-    if(tabs == "tmpexcess2") {
+    if(tabs == "tmpexcess2") { # Remove some options
       # Set number of deaths
       updateSelectInput(session, "variable", "Variable",
+        list(#"Relative excess mortality" = "REM", 
+          "Number of excess deaths" = "NED"),
+        selected = "NED"
+    )
+
+    # Set median 
+    updateSelectInput(session, "statistic", "Statistic",
+      list("Median" = "median"), # "Posterior probability" = "pprob"),
+      selected = "median"
+    )
+
+   updateSelectInput(session, "sex", "Sex",
+     list("Females" = "F", "Males" = "M"), selected = "F")
+   updateSelectInput(session, "agegroup", "Age Group", 
+     #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
+     #selected = "40<")
+     # 40< not shown but are included in 'All'
+     c( "40-59", "60-69", "70-79", "80+"),
+     selected = "40-59")
+
+    } else { # For all other tabs, use full options
+
+       # Set number of deaths
+      updateSelectInput(session, "variable", "Variable",
         list("Relative excess mortality" = "REM",
-        "Number of excess deaths" = "NED"), selected = "NED"
+        "Number of excess deaths" = "NED"), selected = input$variable
     )
 
     # Set median 
     updateSelectInput(session, "statistic", "Statistic",
       list("Median" = "median", "Posterior probability" = "pprob"),
-      selected = "median"
+      selected = input$statistic
     )
 
    updateSelectInput(session, "sex", "Sex",
      list("Both" = "B", "Females" = "F", "Males" = "M"), selected = "F")
-   updateSelectInput(session, "agegroup", "Age Group", 
+   updateSelectInput(session, "agegroup", "Age Group",
      #c("All", "40<", "40-59", "60-69", "70-79", "80+"),
      #selected = "40<")
      # 40< not shown but are included in 'All'
      c("All", "40-59", "60-69", "70-79", "80+"),
-     selected = "40-59")
+     selected = input$agegroup)
+
     }
 
   })
