@@ -11,7 +11,7 @@ output: html_document
 
 # Introduction
 
-This Shiny App is part of the supplementary materials of paper *Excess mortality in Europe during the 2020 COVID-19 pandemic: a multi-country study at the sub-national level* by *G. Konstantinoudis et al.* (2021). This paper estimates the excess mortality caused by the COVID-19 pandemic during 2020 in five European countries: England, Greece, Italy, Spain and Switzerland. The paper is currently available as a [pre-print](). 
+This Shiny App is part of the supplementary materials of paper *Excess mortality in Europe during the 2020 COVID-19 pandemic: a multi-country study at the sub-national level* by *G. Konstantinoudis et al.* (2021). This paper estimates the excess mortality caused by the COVID-19 pandemic during 2020 in five European countries: England, Greece, Italy, Spain and Switzerland. The paper is currently available as a [pre-print](https://www.medrxiv.org/content/10.1101/2021.10.18.21264686v1). 
 
 <center>![Portada del atlas](www/intro_image.png)</center>
 
