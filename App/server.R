@@ -212,6 +212,20 @@ server <- function(input, output, session) {
     # Fix for Greek names
     name_col <- ifelse(input$country == "Greece" & input$aggregation == "province", "NAME_ENG", "NAME")
 
+    if(input$country == "Greece" & input$aggregation == "province") {
+      name_col <- "NAME_ENG"
+    } else {
+      if(input$country == "Italy" & input$aggregation == "province") {
+        name_col <- "NAMNUTS3"
+      } else {
+        if(input$country == "England" & input$aggregation == "province") {
+          name_col <- "nuts318nm"
+        } else {
+          name_col <- "NAME"
+        }
+      }
+    }
+
     if(is.null(tab)) {
       popup <- paste0(
         paste(paste0("<b>Name:</b> ", mymap[, name_col, drop = TRUE], "<br>")),
