@@ -92,7 +92,7 @@ server <- function(input, output, session) {
       updateSelectInput(session, "aggregation", "Aggregation",
        list("National"  = "country", "Region (NUTS2)" = "region",
          "Province (NUTS3)" = "province"),
-        selected = input$country)
+        selected = input$aggregation)
     }
 
     if(tabs == "tmpexcess2") { # Remove some options
